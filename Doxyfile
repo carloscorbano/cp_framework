@@ -1,0 +1,59 @@
+# Doxyfile 1.9.7
+# Project configuration for Doxygen
+
+PROJECT_NAME           = "cp_framework"
+PROJECT_NUMBER         = "0.1.0"
+OUTPUT_DIRECTORY       = docs
+CREATE_SUBDIRS         = NO
+OUTPUT_LANGUAGE        = English
+BRIEF_MEMBER_DESC      = YES
+REPEAT_BRIEF           = YES
+ALWAYS_DETAILED_SEC    = NO
+INLINE_INHERITED_MEMB  = NO
+FULL_PATH_NAMES        = YES
+STRIP_FROM_PATH        = 
+STRIP_FROM_INC_PATH    = 
+
+INPUT                  = include src
+FILE_PATTERNS          = *.h *.hpp *.c *.cpp
+RECURSIVE              = YES
+EXCLUDE                =
+EXCLUDE_SYMBOLS        =
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = NO
+EXTRACT_LOCAL_CLASSES  = YES
+HAVE_DOT               = NO
+
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+GENERATE_LATEX         = NO
+GENERATE_XML           = NO
+GENERATE_MAN           = NO
+GENERATE_RTF           = NO
+
+QUIET                  = NO
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = NO
+WARN_IF_DOC_ERROR      = YES
+
+JAVADOC_AUTOBRIEF      = YES
+MULTILINE_CPP_IS_BRIEF = YES
+
+# Source browser settings
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = NO
+
+# Use C++ settings
+OPTIMIZE_OUTPUT_FOR_C  = NO
+OPTIMIZE_OUTPUT_JAVA   = NO
+
+# Preprocessor
+MACRO_EXPANSION        = NO
+SKIP_FUNCTION_MACROS   = YES
+
+# Set example path (none by default)
+EXAMPLE_PATH           = 
+
+# Tag files
+TAGFILES               = 

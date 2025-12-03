@@ -4,6 +4,7 @@ cmake-build-*/
 out/
 dist/
 vcpkg_installed/
+install/
 
 # CMake
 CMakeFiles/

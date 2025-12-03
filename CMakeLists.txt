@@ -1,10 +1,18 @@
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    set(CMAKE_TOOLCHAIN_FILE "C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        CACHE STRING "")
+endif()
+
 cmake_minimum_required(VERSION 3.31.0)
 project(cp_framework VERSION 0.1.0 LANGUAGES C CXX)
 
 ##########################################################
 # LIB
 ##########################################################
-add_library(${CMAKE_PROJECT_NAME} SHARED src/dllmain.cpp)
+add_library(${CMAKE_PROJECT_NAME} SHARED 
+    src/dllmain.cpp
+    src/core.cpp    
+)
 
 ##########################################################
 # CTEST
@@ -58,3 +66,52 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
         fmt::fmt
         glm::glm
 )
+
+target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE CP_FRAMEWORK_EXPORTS)
+
+##########################################################
+# DOXYGEN
+##########################################################
+find_package(Doxygen)
+if(DOXYGEN_FOUND)
+    # Configure Doxyfile from template to place output in the build tree
+    set(DOXYFILE_IN ${CMAKE_SOURCE_DIR}/Doxyfile.in)
+    set(DOXYFILE_OUT ${CMAKE_BINARY_DIR}/Doxyfile)
+
+    configure_file(${DOXYFILE_IN} ${DOXYFILE_OUT} @ONLY)
+
+    add_custom_target(doc_doxygen
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE_OUT}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM)
+else()
+    message(STATUS "Doxygen not found. Install Doxygen to enable 'doc_doxygen' target.")
+endif()
+
+##########################################################
+# PLANTUML (UML diagrams)
+##########################################################
+find_program(PLANTUML_EXECUTABLE NAMES plantuml)
+set(PLANTUML_JAR "${CMAKE_SOURCE_DIR}/tools/plantuml/plantuml.jar")
+
+if(PLANTUML_EXECUTABLE)
+    add_custom_target(doc_uml
+        COMMAND ${PLANTUML_EXECUTABLE} -tpng -o ${CMAKE_BINARY_DIR}/docs/uml ${CMAKE_SOURCE_DIR}/docs/uml/*.puml
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Generating UML diagrams with PlantUML"
+        VERBATIM)
+elseif(EXISTS ${PLANTUML_JAR})
+    find_program(JAVA_EXECUTABLE NAMES java)
+    if(JAVA_EXECUTABLE)
+        add_custom_target(doc_uml
+            COMMAND ${JAVA_EXECUTABLE} -jar ${PLANTUML_JAR} -tpng -o ${CMAKE_BINARY_DIR}/docs/uml ${CMAKE_SOURCE_DIR}/docs/uml/*.puml
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            COMMENT "Generating UML diagrams with PlantUML (using local plantuml.jar)"
+            VERBATIM)
+    else()
+        message(STATUS "PlantUML jar found but Java not available. Install Java to enable 'doc_uml' target or install PlantUML.")
+    endif()
+else()
+    message(STATUS "PlantUML not found. Install PlantUML in PATH.")
+endif()

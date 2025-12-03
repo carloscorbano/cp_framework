@@ -28,6 +28,10 @@ using int64 = int64_t;
     #define CP_FRAMEWORK_API __declspec(dllimport)
 #endif
 
+#ifndef EXCLUDE_DEBUG
+    #include "debug.hpp"
+#endif
+
 // Vector and matrix helpers
 namespace cp::math {
 

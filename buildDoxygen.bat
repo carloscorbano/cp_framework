@@ -1,1 +1,3 @@
-cmake --build build --target doc_doxygen
+@echo OFF
+
+doxygen Doxyfile

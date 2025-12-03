@@ -15,9 +15,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 ##########################################################
 add_library(${CMAKE_PROJECT_NAME} SHARED 
     src/dllmain.cpp
-    src/core/core.minimal.cpp   
+    src/core.minimal.cpp   
     src/core/debug.cpp 
     src/core/filesystem.cpp
+    src/core/algorithm.cpp
+    src/core/compression.cpp
+    src/core/threadPool.cpp
+    src/core/serializable.cpp
+    src/core/security.cpp
 )
 
 ##########################################################

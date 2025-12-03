@@ -6,6 +6,19 @@
 #include <ostream>
 #include <mutex>
 
+/**
+ * @defgroup Logging Logging System
+ * @brief Thread-safe logging utilities with color output and formatting.
+ *
+ * This module provides:
+ * - Log levels
+ * - A thread-safe static logger class
+ * - ANSI color handling
+ * - Optional file output redirection
+ * - Convenience logging macros
+ * @{
+ */
+
 namespace cp {
 
     /**
@@ -13,8 +26,6 @@ namespace cp {
      * @brief Represents the severity level used for logging output.
      *
      * Levels are used to filter messages and apply different color formatting.
-     * Higher-severity messages (Error, Warn) are typically always shown,
-     * while lower levels (Debug) can be enabled or hidden depending on build mode.
      */
     enum class LogLevel {
         Info,    ///< Informational message.
@@ -26,63 +37,43 @@ namespace cp {
 
     /**
      * @class Debug
-     * @brief Logging utility class providing color output, filtering, and thread safety.
+     * @brief Static logging utility class providing formatting, thread safety, and output control.
      *
      * Features:
      * - Configurable minimum log level.
      * - Automatic flush control.
-     * - Optional ANSI color support (auto-handled on Windows).
+     * - Optional ANSI color support.
      * - Thread-safe output using an internal mutex.
      * - Optional redirection to a file instead of the console.
      *
-     * This class is fully static and does not require instantiation.
+     * @ingroup Logging
      */
     class Debug {
     public:
-        /**
-         * @brief Enables or disables ANSI color output.
-         *
-         * @param enabled True to enable colored output, false to disable.
-         */
+        /** @brief Enables or disables ANSI color output. */
         static void SetColorEnabled(bool enabled);
 
-        /**
-         * @brief Sets the minimum log level that will be printed.
-         *
-         * Messages below this level will be ignored.
-         *
-         * @param level Minimum log level.
-         */
+        /** @brief Sets the minimum log level that will be printed. */
         static void SetMinimumLevel(LogLevel level);
 
-        /**
-         * @brief Enables or disables automatic flushing after each log message.
-         *
-         * @param enabled True to flush automatically, false to buffer output.
-         */
+        /** @brief Enables or disables automatic flushing after each log message. */
         static void SetAutoFlush(bool enabled);
 
-        /**
-         * @brief Redirects all output to a specific file.
-         *
-         * Any previously opened file stream is replaced.
-         *
-         * @param filepath Path to the file to be used for logging.
-         */
+        /** @brief Redirects all output to a file. */
         static void SetLogFile(const std::string& filepath);
 
-        /**
-         * @brief Restores output back to the standard console (stdout).
-         */
+        /** @brief Restores output back to stdout. */
         static void ResetOutputToConsole();
 
         /**
          * @brief Generic logging function with fmt-style formatting.
          *
          * @tparam Args Format arguments.
-         * @param level Log severity to classify the message.
-         * @param format Format string compatible with fmt::format.
-         * @param args Arguments substituted into the format string.
+         * @param level Log severity.
+         * @param format Format string.
+         * @param args Arguments substituted into the format.
+         *
+         * @ingroup Logging
          */
         template <typename... Args>
         static void Log(LogLevel level, fmt::format_string<Args...> format, Args&&... args) {
@@ -93,15 +84,11 @@ namespace cp {
         }
 
         /**
-         * @brief Logs an error and throws a std::runtime_error with the same message.
+         * @brief Logs an error and throws a std::runtime_error.
          *
-         * Useful for exceptions while preserving consistent logging behavior.
+         * @throws std::runtime_error Always thrown.
          *
-         * @tparam Args Format arguments.
-         * @param format Format string.
-         * @param args Arguments for the formatted message.
-         *
-         * @throws std::runtime_error Always thrown with the formatted message.
+         * @ingroup Logging
          */
         template<typename... Args>
         static void Throw(fmt::format_string<Args...> format, Args&&... args) {
@@ -111,70 +98,60 @@ namespace cp {
         }
 
         /**
-         * @brief Internal function responsible for writing the final formatted message.
+         * @brief Internal function responsible for writing the formatted message.
          *
-         * Applies coloring, locking, prefixing, and optional flushing based on
-         * current Debug settings.
+         * Applies coloring, locking, and optional flushing.
          *
-         * @param level Severity of the message.
-         * @param message Final message to output.
+         * @ingroup Logging
          */
         static void Print(LogLevel level, const std::string& message);
 
     private:
-        /// Whether ANSI colors are currently enabled.
-        static inline bool g_colorEnabled = true;
+        static inline bool g_colorEnabled = true;      ///< ANSI color toggle
+        static inline bool g_autoFlush = true;         ///< Auto flush toggle
 
-        /// Whether the logger flushes automatically after each message.
-        static inline bool g_autoFlush = true;
+#ifndef NDEBUG
+        static inline LogLevel g_minLevel = LogLevel::Info;  ///< Debug build default
+#else
+        static inline LogLevel g_minLevel = LogLevel::Warn;  ///< Release build default
+#endif
 
-        /// Minimum log level to display.
-        static inline LogLevel g_minLevel =
-    #ifndef NDEBUG
-            LogLevel::Info;  ///< In Debug builds, show all messages.
-    #else
-            LogLevel::Warn;  ///< In Release builds, hide Info/Debug by default.
-    #endif
-
-        /// Output stream used for logging (defaults to stdout).
-        static inline std::ostream* g_outputStream = nullptr;
-
-        /// Mutex providing thread-safe logging.
-        static inline std::mutex g_mutex;
+        static inline std::ostream* g_outputStream = nullptr; ///< Output stream
+        static inline std::mutex g_mutex;                      ///< Thread safety mutex
     };
 
 } // namespace cp
 
+/** @} */ // end of Logging group
+
+
 // -----------------------------------------------------------------------------
-// Simplified logging macros
+// Macros Group
 // -----------------------------------------------------------------------------
 
 /**
- * @brief Logs an informational message.
+ * @defgroup Logging_Macros Logging Macros
+ * @brief Convenience macros that wrap cp::Debug functions.
+ * @ingroup Logging
+ * @{
  */
-#define LOG_INFO(fmt_str, ...)    ::cp::Debug::Log(::cp::LogLevel::Info, fmt_str, ##__VA_ARGS__)
 
-/**
- * @brief Logs a success message.
- */
+/** @brief Logs an informational message. */
+#define LOG_INFO(fmt_str, ...)    ::cp::Debug::Log(::cp::LogLevel::Info,    fmt_str, ##__VA_ARGS__)
+
+/** @brief Logs a success message. */
 #define LOG_SUCCESS(fmt_str, ...) ::cp::Debug::Log(::cp::LogLevel::Success, fmt_str, ##__VA_ARGS__)
 
-/**
- * @brief Logs a warning message.
- */
-#define LOG_WARN(fmt_str, ...)    ::cp::Debug::Log(::cp::LogLevel::Warn, fmt_str, ##__VA_ARGS__)
+/** @brief Logs a warning. */
+#define LOG_WARN(fmt_str, ...)    ::cp::Debug::Log(::cp::LogLevel::Warn,    fmt_str, ##__VA_ARGS__)
 
-/**
- * @brief Logs an error message.
- */
-#define LOG_ERROR(fmt_str, ...)   ::cp::Debug::Log(::cp::LogLevel::Error, fmt_str, ##__VA_ARGS__)
+/** @brief Logs an error. */
+#define LOG_ERROR(fmt_str, ...)   ::cp::Debug::Log(::cp::LogLevel::Error,   fmt_str, ##__VA_ARGS__)
 
-/**
- * @brief Logs a debug-only message.
- */
-#define LOG_DEBUG(fmt_str, ...)   ::cp::Debug::Log(::cp::LogLevel::Debug, fmt_str, ##__VA_ARGS__)
+/** @brief Logs a debug-only message. */
+#define LOG_DEBUG(fmt_str, ...)   ::cp::Debug::Log(::cp::LogLevel::Debug,   fmt_str, ##__VA_ARGS__)
 
-/**
- * @brief Logs an error and throws a runtime exception.
- */
+/** @brief Logs an error and throws a runtime exception. */
 #define LOG_THROW(fmt_str, ...)   ::cp::Debug::Throw(fmt_str, ##__VA_ARGS__)
+
+/** @} */ // end of Logging_Macros group

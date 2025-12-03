@@ -1,0 +1,75 @@
+/// \mainpage My Project
+///
+/// # Welcome to My Project Documentation
+///
+/// This documentation provides an overview of the entire codebase, design
+/// philosophy, module structure, and usage guidelines.
+///
+/// ---
+///
+/// ## 📌 About the Project
+/// My Project is a C++ application focused on high-performance rendering using
+/// Vulkan. Its goal is to provide an easy-to-use framework with clean APIs,
+/// expressive abstractions, and strong RAII guarantees.
+///
+/// ---
+///
+/// ## 🚀 Features
+/// - Modern C++ (C++20/23)
+/// - RAII resource management
+/// - Vulkan rendering pipeline abstractions
+/// - Event dispatcher system
+/// - Modular filesystem utilities
+/// - Strong separation of responsibilities
+///
+/// ---
+///
+/// ## 🧩 Modules Overview
+/// The project is divided into the following main modules:
+/// - **Core**: basic utilities, memory, filesystem, logging
+/// - **Graphics**: Vulkan wrapper, pipelines, command buffers
+/// - **Events**: global dispatcher, strongly-typed event system
+/// - **Math**: vectors, matrices, transforms
+///
+/// For more details, see the module list:
+/// - \ref Core
+/// - \ref Graphics
+/// - \ref Events
+/// - \ref Math
+///
+/// ---
+///
+/// ## 📘 Getting Started
+/// ### Build Instructions
+/// 1. Install dependencies (Vulkan SDK, GLFW, etc.)  
+/// 2. Configure the project:
+///    ```bash
+///    cmake -B build -DCMAKE_BUILD_TYPE=Release
+///    ```
+/// 3. Compile:
+///    ```bash
+///    cmake --build build
+///    ```
+/// 4. Run the executable inside the `/bin` folder.
+///
+/// ---
+///
+/// ## 📚 Additional Resources
+/// - Project repository (GitHub/GitLab)
+/// - Vulkan documentation
+/// - CMake documentation
+///
+/// ---
+///
+/// ## 📄 License
+/// This project is distributed under the MIT License.
+///
+/// ---
+///
+/// ## 👤 Author
+/// Carlos Corbano
+///
+/// Thank you for using My Project!  
+/// Continue exploring the documentation through the sidebar.
+///
+/// ---

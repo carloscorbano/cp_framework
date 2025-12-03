@@ -1,4 +1,4 @@
-#include "cp_framework/core.hpp"
+#include "cp_framework/core/core.minimal.hpp"
 
 namespace cp::math {
 

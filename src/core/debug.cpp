@@ -1,4 +1,4 @@
-#include "cp_framework/debug.hpp"
+#include "cp_framework/core/debug.hpp"
 
 #include <chrono>
 #include <iostream>

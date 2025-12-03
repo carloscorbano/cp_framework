@@ -1,8 +1,0 @@
-<map id="Security and Encryption Utilities" name="Security and Encryption Utilities">
-<area shape="rect" id="Node000003" href="$group___compression.html" title=" " alt="" coords="228,5,406,32"/>
-<area shape="rect" id="Node000002" href="$group___crypto.html" title="General cryptography&#45;related helper classes and functions." alt="" coords="242,56,392,83"/>
-<area shape="rect" id="Node000004" href="$group___logging.html" title=" " alt="" coords="259,107,374,133"/>
-<area shape="rect" id="Node000005" href="$group___m_map.html" title=" " alt="" coords="245,157,388,184"/>
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,99,166,141"/>
-<area shape="rect" id="Node000006" href="$group___serialization_core.html" title=" " alt="" coords="242,208,392,235"/>
-</map>

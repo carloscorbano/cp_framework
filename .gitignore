@@ -1,0 +1,46 @@
+# Build directories
+build/
+cmake-build-*/
+out/
+dist/
+vcpkg_installed/
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.cmake
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencies
+/third_party/
+/vendor/
+
+# Executables
+*.exe
+*.out
+*.app
+*.dll
+*.so
+*.dylib
+
+# Object files
+*.o
+*.obj
+*.a
+*.lib
+
+# Miscellaneous
+*.log
+.env

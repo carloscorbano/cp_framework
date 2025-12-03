@@ -5,6 +5,7 @@ out/
 dist/
 vcpkg_installed/
 install/
+docs/html/
 
 # CMake
 CMakeFiles/

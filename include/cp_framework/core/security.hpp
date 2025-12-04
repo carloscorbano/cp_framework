@@ -9,6 +9,7 @@
 #include <vector>
 #include <cstdint>
 #include <span>
+#include "export.hpp"
 
 namespace cp::security {
 
@@ -24,7 +25,7 @@ namespace cp::security {
      * @brief Holds AES encryption key and initialization vector.
      * @ingroup Security
      */
-    struct SecurityData
+    struct CP_API SecurityData
     {
         std::array<uint8_t, KEY_SIZE> key{}; ///< AES-128 encryption key.
         std::array<uint8_t, IV_SIZE>  iv{};  ///< AES initialization vector.
@@ -39,7 +40,7 @@ namespace cp::security {
      * 
      * @ingroup Security
      */
-    std::vector<uint8_t> EncryptCBC(std::span<const uint8_t> data,
+    CP_API std::vector<uint8_t> EncryptCBC(std::span<const uint8_t> data,
                                     const SecurityData& securityData);
 
     /**
@@ -51,7 +52,7 @@ namespace cp::security {
      * 
      * @ingroup Security
      */
-    std::vector<uint8_t> DecryptCBC(std::span<const uint8_t> encrypted,
+    CP_API std::vector<uint8_t> DecryptCBC(std::span<const uint8_t> encrypted,
                                     const SecurityData& securityData);
 
     /**
@@ -61,7 +62,7 @@ namespace cp::security {
      * 
      * @ingroup Security
      */
-    SecurityData GenerateRandomKeyAndIV();
+    CP_API SecurityData GenerateRandomKeyAndIV();
 
 } // namespace cp::security
 

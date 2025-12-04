@@ -17,24 +17,24 @@
 
 namespace cp::filesystem {
     namespace {
-        std::filesystem::path GamePath;
+        file_path GamePath;
         std::mutex GamePathMutex;
         size_t ReadBytesAutoThreshold = 1 * 1024 * 1024;
     }
 
-    std::filesystem::path NormalizePath(const std::filesystem::path& path) noexcept {
+    file_path NormalizePath(const file_path& path) noexcept {
         std::error_code ec;
         auto normalized = std::filesystem::weakly_canonical(path, ec);
-        if (ec) normalized = std::filesystem::path(path);
+        if (ec) normalized = file_path(path);
         return normalized.make_preferred();
     }
 
-    void SetGamePath(const std::filesystem::path& path) {
+    void SetGamePath(const file_path& path) {
         std::scoped_lock lock(GamePathMutex);
         GamePath = NormalizePath(path);
     }
 
-    std::filesystem::path GetGamePath() {
+    file_path GetGamePath() {
         std::scoped_lock lock(GamePathMutex);
         return GamePath;
     }
@@ -82,7 +82,7 @@ namespace cp::filesystem {
         return *this;
     }
 
-    bool MMapFile::open(const std::filesystem::path& filepath) noexcept {
+    bool MMapFile::open(const file_path& filepath) noexcept {
         release();
     #ifdef _WIN32
         m_handle = CreateFileW(filepath.wstring().c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -137,7 +137,7 @@ namespace cp::filesystem {
     #endif
     }
 
-    std::shared_ptr<uint8_t[]> ReadBytes(const std::filesystem::path& path, size_t& outSize) {
+    std::shared_ptr<uint8_t[]> ReadBytes(const file_path& path, size_t& outSize) {
         auto file = NormalizePath(path);
         std::ifstream in(file, std::ios::binary | std::ios::ate);
         if (!in) throw std::runtime_error("Failed to open file: " + file.string());
@@ -153,7 +153,7 @@ namespace cp::filesystem {
         return buffer;
     }
 
-    std::pair<std::shared_ptr<uint8_t[]>, std::span<const uint8_t>> ReadBytesAuto(const std::filesystem::path& path) {
+    std::pair<std::shared_ptr<uint8_t[]>, std::span<const uint8_t>> ReadBytesAuto(const file_path& path) {
         auto file = NormalizePath(path);
         size_t fileSize = std::filesystem::file_size(file);
 
@@ -171,7 +171,7 @@ namespace cp::filesystem {
         }
     }
 
-    void WriteBytes(const std::filesystem::path& path, std::span<const uint8_t> data, bool append) {
+    void WriteBytes(const file_path& path, std::span<const uint8_t> data, bool append) {
         auto file = NormalizePath(path);
         std::filesystem::create_directories(file.parent_path());
         std::ofstream out(file, std::ios::binary | (append ? std::ios::app : std::ios::trunc));
@@ -180,12 +180,12 @@ namespace cp::filesystem {
         out.write(reinterpret_cast<const char*>(data.data()), static_cast<std::streamsize>(data.size()));
     }
 
-    bool FileExists(const std::filesystem::path& path) noexcept {
+    bool FileExists(const file_path& path) noexcept {
         std::error_code ec;
         return std::filesystem::is_regular_file(NormalizePath(path), ec);
     }
 
-    bool DeleteFileSafe(const std::filesystem::path& path) noexcept {
+    bool DeleteFileSafe(const file_path& path) noexcept {
         auto file = NormalizePath(path);
         if (std::filesystem::is_regular_file(file)) {
             std::error_code ec;

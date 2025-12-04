@@ -25,7 +25,8 @@
 #include <cstdint>
 #include <span>
 #include <vector>
-#include <string_view>
+#include "types.hpp"
+#include "export.hpp"
 
 namespace cp::algorithm {
 
@@ -41,18 +42,18 @@ namespace cp::algorithm {
      * MD5 md5;
      * md5.update("hello");
      * md5.finalize();
-     * std::string hash = md5.hexdigest();
+     * string hash = md5.hexdigest();
      * @endcode
      *
      * Or using the convenience helpers:
      * @code
      * auto md5 = MD5::Compute("hello");
-     * std::string hash = md5.hexdigest();
+     * string hash = md5.hexdigest();
      * @endcode
      *
      * @ingroup Crypto_MD5
      */
-    class MD5 
+    class CP_API MD5 
     {
     public:
         /**
@@ -73,7 +74,7 @@ namespace cp::algorithm {
          *
          * @param input The string to process.
          */
-        void update(const std::string& input);
+        void update(const string& input);
 
         /**
          * @brief Finalizes the MD5 computation.
@@ -87,7 +88,7 @@ namespace cp::algorithm {
          *
          * @return 32-character hex digest.
          */
-        std::string hexdigest();
+        string hexdigest();
 
         /**
          * @brief Utility method: compute an MD5 hash directly from a byte span.
@@ -103,7 +104,7 @@ namespace cp::algorithm {
          * @param text String view to hash.
          * @return A finalized MD5 instance.
          */
-        static MD5 Compute(std::string_view text);
+        static MD5 Compute(string_view text);
 
     private:
         /**
@@ -150,12 +151,12 @@ namespace cp::algorithm {
          * @param uppercase Whether to use uppercase A-F.
          * @param prefix Whether to prepend "0x".
          */
-        std::string ToHexString(std::span<const uint8_t> data, bool uppercase=false, bool prefix=false);
+        CP_API string ToHexString(std::span<const uint8_t> data, bool uppercase=false, bool prefix=false);
 
         /**
          * @brief Overload: vector version of ToHexString().
          */
-        std::string ToHexString(const std::vector<uint8_t>& data, bool uppercase=false, bool prefix=false);
+        CP_API string ToHexString(const std::vector<uint8_t>& data, bool uppercase=false, bool prefix=false);
 
         /**
          * @brief Converts a hex string into bytes.
@@ -163,12 +164,12 @@ namespace cp::algorithm {
          * @param hex The input hex string.
          * @return Vector of decoded bytes.
          */
-        std::vector<uint8_t> FromHexString(std::string_view hex);
+        CP_API std::vector<uint8_t> FromHexString(string_view hex);
 
         /**
          * @brief Converts a hex string with optional "0x" prefix into bytes.
          */
-        std::vector<uint8_t> FromHexStringPrefixed(std::string_view hex);
+        CP_API std::vector<uint8_t> FromHexStringPrefixed(string_view hex);
     }
 
 
@@ -189,37 +190,37 @@ namespace cp::algorithm {
         /**
          * @brief Encodes bytes into Base64 text.
          */
-        std::string Base64Encode(std::span<const uint8_t> bytes);
+        CP_API string Base64Encode(std::span<const uint8_t> bytes);
 
         /**
          * @brief Overload: vector version of Base64Encode().
          */
-        std::string Base64Encode(const std::vector<uint8_t>& bytes);
+        CP_API string Base64Encode(const std::vector<uint8_t>& bytes);
 
         /**
          * @brief Encodes text directly into Base64.
          */
-        std::string Base64Encode(std::string_view text);
+        CP_API string Base64Encode(string_view text);
 
         /**
          * @brief Encodes bytes using URL-safe Base64 variant.
          */
-        std::string Base64EncodeUrlSafe(std::span<const uint8_t> bytes);
+        CP_API string Base64EncodeUrlSafe(std::span<const uint8_t> bytes);
 
         /**
          * @brief Encodes text using URL-safe Base64 variant.
          */
-        std::string Base64EncodeUrlSafe(std::string_view text);
+        CP_API string Base64EncodeUrlSafe(string_view text);
 
         /**
          * @brief Decodes a Base64 string into bytes.
          */
-        std::vector<uint8_t> Base64Decode(std::string_view encoded);
+        CP_API std::vector<uint8_t> Base64Decode(string_view encoded);
 
         /**
          * @brief Decodes a URL-safe Base64 string into bytes.
          */
-        std::vector<uint8_t> Base64DecodeUrlSafe(std::string_view encoded);
+        CP_API std::vector<uint8_t> Base64DecodeUrlSafe(string_view encoded);
     }
 
 } // namespace cp

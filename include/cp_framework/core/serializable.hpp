@@ -10,6 +10,7 @@
 #include <type_traits>
 #include <functional>
 #include <nlohmann/json.hpp>
+#include "export.hpp"
 
 /**
  * @defgroup Serialization Serialization System
@@ -48,7 +49,7 @@ namespace cp {
      *
      * @ingroup SerializationCore
      */
-    class SerializableBase {
+    class CP_API SerializableBase {
     public:
         /// Virtual destructor.
         virtual ~SerializableBase() = default;

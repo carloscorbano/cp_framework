@@ -14,6 +14,7 @@
 #include <memory>
 #include <span>
 #include <limits>
+#include "export.hpp"
 
 namespace cp::compression {
 
@@ -36,7 +37,7 @@ namespace cp::compression {
      *
      * @ingroup Compression
      */
-    [[nodiscard]] std::vector<uint8_t> CompressData(std::span<const uint8_t> data,
+    [[nodiscard]] CP_API std::vector<uint8_t> CompressData(std::span<const uint8_t> data,
                                                     int level = 1);
 
     /**
@@ -59,7 +60,7 @@ namespace cp::compression {
      *
      * @ingroup Compression
      */
-    [[nodiscard]] std::vector<uint8_t> UncompressData(
+    [[nodiscard]] CP_API std::vector<uint8_t> UncompressData(
         std::span<const uint8_t> compressedData,
         uint64_t maxAllowedSize = 4ULL * 1024 * 1024 * 1024
     );

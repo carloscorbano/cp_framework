@@ -5,6 +5,7 @@
 #include <fmt/std.h>
 #include <ostream>
 #include <mutex>
+#include "export.hpp"
 
 /**
  * @defgroup Logging Logging System
@@ -27,7 +28,7 @@ namespace cp {
      *
      * Levels are used to filter messages and apply different color formatting.
      */
-    enum class LogLevel {
+    enum class CP_API LogLevel {
         Info,    ///< Informational message.
         Success, ///< Indicates a successful operation.
         Warn,    ///< Warning: non-critical issue.
@@ -48,7 +49,7 @@ namespace cp {
      *
      * @ingroup Logging
      */
-    class Debug {
+    class CP_API Debug {
     public:
         /** @brief Enables or disables ANSI color output. */
         static void SetColorEnabled(bool enabled);

@@ -1,8 +1,9 @@
 #pragma once
-#include <filesystem>
 #include <memory>
 #include <span>
 #include <cstdint>
+#include "export.hpp"
+#include "types.hpp"
 
  /**
   * @defgroup Filesystem Filesystem Utilities
@@ -34,7 +35,7 @@ namespace cp::filesystem {
      *
      * @ingroup MMap
      */
-    class MMapFile {
+    class CP_API MMapFile {
     public:
         /** @brief Default constructor (creates an empty, unopened mapping). */
         MMapFile() = default;
@@ -61,7 +62,7 @@ namespace cp::filesystem {
          *
          * @ingroup MMap
          */
-        bool open(const std::filesystem::path& filepath) noexcept;
+        bool open(const file_path& filepath) noexcept;
 
         /**
          * @brief Releases the mapped file, if any.
@@ -111,7 +112,7 @@ namespace cp::filesystem {
      *
      * @ingroup Filesystem
      */
-    std::filesystem::path NormalizePath(const std::filesystem::path& path) noexcept;
+    CP_API file_path NormalizePath(const file_path& path) noexcept;
 
     /**
      * @brief Sets the global game data directory.
@@ -119,7 +120,7 @@ namespace cp::filesystem {
      *
      * @ingroup Filesystem
      */
-    void SetGamePath(const std::filesystem::path& path);
+    CP_API void SetGamePath(const file_path& path);
 
     /**
      * @brief Retrieves the global game data directory.
@@ -127,7 +128,7 @@ namespace cp::filesystem {
      *
      * @ingroup Filesystem
      */
-    std::filesystem::path GetGamePath();
+    CP_API file_path GetGamePath();
 
 
     // -------------------------------------------------------
@@ -145,7 +146,7 @@ namespace cp::filesystem {
      *
      * @ingroup Filesystem
      */
-    std::shared_ptr<uint8_t[]> ReadBytes(const std::filesystem::path& path, size_t& outSize);
+    CP_API std::shared_ptr<uint8_t[]> ReadBytes(const file_path& path, size_t& outSize);
 
     /**
      * @brief Reads file bytes and also returns a span view of the data.
@@ -157,7 +158,7 @@ namespace cp::filesystem {
      *
      * @ingroup Filesystem
      */
-    std::pair<std::shared_ptr<uint8_t[]>, std::span<const uint8_t>> ReadBytesAuto(const std::filesystem::path& path);
+    CP_API std::pair<std::shared_ptr<uint8_t[]>, std::span<const uint8_t>> ReadBytesAuto(const file_path& path);
 
     /**
      * @brief Writes binary data to a file.
@@ -168,7 +169,7 @@ namespace cp::filesystem {
      *
      * @ingroup Filesystem
      */
-    void WriteBytes(const std::filesystem::path& path, std::span<const uint8_t> data, bool append = false);
+    CP_API void WriteBytes(const file_path& path, std::span<const uint8_t> data, bool append = false);
 
     /**
      * @brief Checks if a file exists.
@@ -177,7 +178,7 @@ namespace cp::filesystem {
      *
      * @ingroup Filesystem
      */
-    bool FileExists(const std::filesystem::path& path) noexcept;
+    CP_API bool FileExists(const file_path& path) noexcept;
 
     /**
      * @brief Attempts to delete a file safely.
@@ -186,7 +187,7 @@ namespace cp::filesystem {
      *
      * @ingroup Filesystem
      */
-    bool DeleteFileSafe(const std::filesystem::path& path) noexcept;
+    CP_API bool DeleteFileSafe(const file_path& path) noexcept;
 
 } // namespace cp::filesystem
 

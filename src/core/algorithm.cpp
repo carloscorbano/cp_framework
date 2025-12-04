@@ -48,7 +48,7 @@ namespace cp::algorithm {
         std::copy_n(input + i, length - i, buffer + index);
     }
 
-    void MD5::update(const std::string& input) {
+    void MD5::update(const string& input) {
         update(reinterpret_cast<const unsigned char*>(input.data()), input.size());
     }
 
@@ -176,9 +176,9 @@ namespace cp::algorithm {
                         (static_cast<uint32_t>(input[j+3]) << 24);
     }
 
-    std::string MD5::hexdigest() {
+    string MD5::hexdigest() {
         if (!finalized) finalize();
-        std::string result(32, '0');
+        string result(32, '0');
         static constexpr char HEX[] = "0123456789abcdef";
         for (int i = 0; i < 16; ++i) {
             result[i*2]   = HEX[(digest[i] >> 4) & 0xF];
@@ -195,7 +195,7 @@ namespace cp::algorithm {
         return md5;
     }
 
-    MD5 MD5::Compute(std::string_view text) {
+    MD5 MD5::Compute(string_view text) {
         return Compute(std::span<const uint8_t>(
             reinterpret_cast<const uint8_t*>(text.data()), text.size()));
     }
@@ -205,8 +205,8 @@ namespace cp::algorithm {
         static constexpr char HEX_LOWER[] = "0123456789abcdef";
         static constexpr char HEX_UPPER[] = "0123456789ABCDEF";
 
-        std::string ToHexString(std::span<const uint8_t> data, bool uppercase, bool prefix) {
-            std::string out;
+        string ToHexString(std::span<const uint8_t> data, bool uppercase, bool prefix) {
+            string out;
             out.reserve(data.size() * (prefix ? 4 : 2));
             const char* table = uppercase ? HEX_UPPER : HEX_LOWER;
             for (uint8_t byte : data) {
@@ -217,12 +217,12 @@ namespace cp::algorithm {
             return out;
         }
 
-        std::string ToHexString(const std::vector<uint8_t>& data, bool uppercase, bool prefix) {
+        string ToHexString(const std::vector<uint8_t>& data, bool uppercase, bool prefix) {
             return ToHexString(std::span<const uint8_t>(data.data(), data.size()), uppercase, prefix);
         }
 
-        std::vector<uint8_t> FromHexString(std::string_view hex) {
-            std::string cleaned;
+        std::vector<uint8_t> FromHexString(string_view hex) {
+            string cleaned;
             cleaned.reserve(hex.size());
             for (char c : hex)
                 if (!std::isspace(static_cast<unsigned char>(c)))
@@ -242,7 +242,7 @@ namespace cp::algorithm {
             return bytes;
         }
 
-        std::vector<uint8_t> FromHexStringPrefixed(std::string_view hex)
+        std::vector<uint8_t> FromHexStringPrefixed(string_view hex)
         {
             std::vector<uint8_t> bytes;
             size_t i = 0;
@@ -282,11 +282,11 @@ namespace cp::algorithm {
             return table;
         }();
 
-        static inline std::string base64EncodeImpl(std::span<const uint8_t> bytes,
+        static inline string base64EncodeImpl(std::span<const uint8_t> bytes,
                                                    const char* alphabet,
                                                    bool with_padding)
         {
-            std::string out;
+            string out;
             out.reserve(((bytes.size() + 2) / 3) * 4);
             uint32_t val = 0;
             int valb = -6;
@@ -305,7 +305,7 @@ namespace cp::algorithm {
             return out;
         }
 
-        static inline std::vector<uint8_t> Base64DecodeImpl(std::string_view input,
+        static inline std::vector<uint8_t> Base64DecodeImpl(string_view input,
                                                             const std::array<int,256>& table)
         {
             std::vector<uint8_t> out;
@@ -329,21 +329,21 @@ namespace cp::algorithm {
             return out;
         }
 
-        std::string Base64Encode(std::span<const uint8_t> bytes) {
+        string Base64Encode(std::span<const uint8_t> bytes) {
             return base64EncodeImpl(bytes, BASE64_ALPHABET, true);
         }
 
-        std::string Base64Encode(const std::vector<uint8_t>& bytes) {
+        string Base64Encode(const std::vector<uint8_t>& bytes) {
             return Base64Encode(std::span<const uint8_t>(bytes.data(), bytes.size()));
         }
 
-        std::string Base64Encode(std::string_view text) {
+        string Base64Encode(string_view text) {
             return Base64Encode(std::span<const uint8_t>(
                 reinterpret_cast<const uint8_t*>(text.data()), text.size()));
         }
 
-        std::string Base64EncodeUrlSafe(std::span<const uint8_t> bytes) {
-            std::string s = base64EncodeImpl(bytes, BASE64_ALPHABET, true);
+        string Base64EncodeUrlSafe(std::span<const uint8_t> bytes) {
+            string s = base64EncodeImpl(bytes, BASE64_ALPHABET, true);
             for (char& ch : s) {
                 if (ch == '+') ch = '-';
                 else if (ch == '/') ch = '_';
@@ -352,17 +352,17 @@ namespace cp::algorithm {
             return s;
         }
 
-        std::string Base64EncodeUrlSafe(std::string_view text) {
+        string Base64EncodeUrlSafe(string_view text) {
             return Base64EncodeUrlSafe(std::span<const uint8_t>(
                 reinterpret_cast<const uint8_t*>(text.data()), text.size()));
         }
 
-        std::vector<uint8_t> Base64Decode(std::string_view encoded) {
+        std::vector<uint8_t> Base64Decode(string_view encoded) {
             return Base64DecodeImpl(encoded, BASE64_DECODE_TABLE);
         }
 
-        std::vector<uint8_t> Base64DecodeUrlSafe(std::string_view input) {
-            std::string s(input);
+        std::vector<uint8_t> Base64DecodeUrlSafe(string_view input) {
+            string s(input);
             for (char& ch : s) {
                 if (ch == '-') ch = '+';
                 else if (ch == '_') ch = '/';

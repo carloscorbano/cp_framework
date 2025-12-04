@@ -10,6 +10,7 @@
 #include <atomic>
 #include <random>
 #include <memory>
+#include "export.hpp"
 
 namespace cp {
     /**
@@ -22,7 +23,7 @@ namespace cp {
      *
      * @ingroup Threading
      */
-    enum class TaskPriority { HIGH, NORMAL, LOW };
+    enum class CP_API TaskPriority { HIGH, NORMAL, LOW };
 
     /**
      * @class ThreadPool
@@ -42,7 +43,7 @@ namespace cp {
      *
      * @ingroup Threading
      */
-    class ThreadPool {
+    class CP_API ThreadPool {
     public:
         /**
          * @brief Constructs a thread pool with the specified number of worker threads.

@@ -5,25 +5,26 @@
 #include "export.hpp"
 #include "types.hpp"
 
- /**
-  * @defgroup Filesystem Filesystem Utilities
-  * @brief Cross-platform filesystem and file I/O utilities.
-  *
-  * This module includes:
-  * - Memory-mapped file support (Windows + POSIX)
-  * - Normalization and management of game paths
-  * - Binary file reading/writing helpers
-  * @{
-  */
+/**
+ * @defgroup Filesystem Filesystem Utilities
+ * @brief Cross-platform filesystem and file I/O utilities.
+ *
+ * This module includes:
+ * - Memory-mapped file support (Windows + POSIX)
+ * - Normalization and management of game paths
+ * - Binary file reading/writing helpers
+ * @{
+ */
 
- /**
-  * @defgroup MMap Memory-Mapped File
-  * @ingroup Filesystem
-  * @brief RAII wrapper for cross-platform memory-mapped file access.
-  * @{
-  */
+/**
+ * @defgroup MMap Memory-Mapped File
+ * @ingroup Filesystem
+ * @brief RAII wrapper for cross-platform memory-mapped file access.
+ * @{
+ */
 
-namespace cp::filesystem {
+namespace cp::filesystem
+{
 
     /**
      * @class MMapFile
@@ -35,7 +36,8 @@ namespace cp::filesystem {
      *
      * @ingroup MMap
      */
-    class CP_API MMapFile {
+    class CP_API MMapFile
+    {
     public:
         /** @brief Default constructor (creates an empty, unopened mapping). */
         MMapFile() = default;
@@ -44,16 +46,16 @@ namespace cp::filesystem {
         ~MMapFile() noexcept;
 
         /** @brief Deleted copy constructor (mappings cannot be duplicated). */
-        MMapFile(const MMapFile&) = delete;
+        MMapFile(const MMapFile &) = delete;
 
         /** @brief Deleted copy assignment operator. */
-        MMapFile& operator=(const MMapFile&) = delete;
+        MMapFile &operator=(const MMapFile &) = delete;
 
         /** @brief Move constructor. */
-        MMapFile(MMapFile&& other) noexcept;
+        MMapFile(MMapFile &&other) noexcept;
 
         /** @brief Move assignment operator. */
-        MMapFile& operator=(MMapFile&& other) noexcept;
+        MMapFile &operator=(MMapFile &&other) noexcept;
 
         /**
          * @brief Opens and memory-maps a file.
@@ -62,7 +64,7 @@ namespace cp::filesystem {
          *
          * @ingroup MMap
          */
-        bool open(const file_path& filepath) noexcept;
+        bool open(const file_path &filepath) noexcept;
 
         /**
          * @brief Releases the mapped file, if any.
@@ -76,7 +78,7 @@ namespace cp::filesystem {
          *
          * @ingroup MMap
          */
-        [[nodiscard]] void* data() const noexcept { return m_data; }
+        [[nodiscard]] void *data() const noexcept { return m_data; }
 
         /**
          * @brief Gets the size of the mapped region.
@@ -87,19 +89,18 @@ namespace cp::filesystem {
         [[nodiscard]] size_t size() const noexcept { return m_size; }
 
     private:
-    #ifdef _WIN32
-        void* m_data = nullptr;      ///< Pointer to mapped memory.
-        void* m_handle = nullptr;    ///< File handle for Windows.
-        void* m_mapHandle = nullptr; ///< Mapping handle for Windows.
-    #else
-        void* m_data = nullptr;      ///< Pointer to mapped memory.
-        int m_fd = -1;               ///< File descriptor for POSIX systems.
-    #endif
-        size_t m_size = 0;           ///< Size of the mapped file.
+#ifdef _WIN32
+        void *m_data = nullptr;      ///< Pointer to mapped memory.
+        void *m_handle = nullptr;    ///< File handle for Windows.
+        void *m_mapHandle = nullptr; ///< Mapping handle for Windows.
+#else
+        void *m_data = nullptr; ///< Pointer to mapped memory.
+        int m_fd = -1;          ///< File descriptor for POSIX systems.
+#endif
+        size_t m_size = 0; ///< Size of the mapped file.
     };
 
     /** @} */ // end of MMap group
-
 
     // -------------------------------------------------------
     // General filesystem utilities
@@ -112,7 +113,7 @@ namespace cp::filesystem {
      *
      * @ingroup Filesystem
      */
-    CP_API file_path NormalizePath(const file_path& path) noexcept;
+    CP_API file_path NormalizePath(const file_path &path) noexcept;
 
     /**
      * @brief Sets the global game data directory.
@@ -120,7 +121,7 @@ namespace cp::filesystem {
      *
      * @ingroup Filesystem
      */
-    CP_API void SetGamePath(const file_path& path);
+    CP_API void SetGamePath(const file_path &path);
 
     /**
      * @brief Retrieves the global game data directory.
@@ -129,7 +130,6 @@ namespace cp::filesystem {
      * @ingroup Filesystem
      */
     CP_API file_path GetGamePath();
-
 
     // -------------------------------------------------------
     // File operations
@@ -146,7 +146,7 @@ namespace cp::filesystem {
      *
      * @ingroup Filesystem
      */
-    CP_API std::shared_ptr<uint8_t[]> ReadBytes(const file_path& path, size_t& outSize);
+    CP_API std::shared_ptr<uint8_t[]> ReadBytes(const file_path &path, size_t &outSize);
 
     /**
      * @brief Reads file bytes and also returns a span view of the data.
@@ -158,7 +158,7 @@ namespace cp::filesystem {
      *
      * @ingroup Filesystem
      */
-    CP_API std::pair<std::shared_ptr<uint8_t[]>, std::span<const uint8_t>> ReadBytesAuto(const file_path& path);
+    CP_API std::pair<std::shared_ptr<uint8_t[]>, std::span<const uint8_t>> ReadBytesAuto(const file_path &path);
 
     /**
      * @brief Writes binary data to a file.
@@ -169,7 +169,7 @@ namespace cp::filesystem {
      *
      * @ingroup Filesystem
      */
-    CP_API void WriteBytes(const file_path& path, std::span<const uint8_t> data, bool append = false);
+    CP_API void WriteBytes(const file_path &path, std::span<const uint8_t> data, bool append = false);
 
     /**
      * @brief Checks if a file exists.
@@ -178,7 +178,7 @@ namespace cp::filesystem {
      *
      * @ingroup Filesystem
      */
-    CP_API bool FileExists(const file_path& path) noexcept;
+    CP_API bool FileExists(const file_path &path) noexcept;
 
     /**
      * @brief Attempts to delete a file safely.
@@ -187,7 +187,7 @@ namespace cp::filesystem {
      *
      * @ingroup Filesystem
      */
-    CP_API bool DeleteFileSafe(const file_path& path) noexcept;
+    CP_API bool DeleteFileSafe(const file_path &path) noexcept;
 
 } // namespace cp::filesystem
 

@@ -31,7 +31,8 @@
  * @{
  */
 
-namespace cp {
+namespace cp
+{
 
     /**
      * @class SerializableBase
@@ -49,7 +50,8 @@ namespace cp {
      *
      * @ingroup SerializationCore
      */
-    class CP_API SerializableBase {
+    class CP_API SerializableBase
+    {
     public:
         /// Virtual destructor.
         virtual ~SerializableBase() = default;
@@ -67,12 +69,15 @@ namespace cp {
          *
          * @ingroup SerializationCore
          */
-        template<typename T>
-        void RegisterField(const std::string& name, T& field) {
-            m_fields[name] = [&field]() -> nlohmann::json {
+        template <typename T>
+        void RegisterField(const std::string &name, T &field)
+        {
+            m_fields[name] = [&field]() -> nlohmann::json
+            {
                 return SerializeField(field);
             };
-            m_deserializers[name] = [&field](const nlohmann::json& j) {
+            m_deserializers[name] = [&field](const nlohmann::json &j)
+            {
                 DeserializeField(field, j);
             };
         }
@@ -87,9 +92,11 @@ namespace cp {
          *
          * @ingroup SerializationCore
          */
-        nlohmann::json Serialize() const {
+        nlohmann::json Serialize() const
+        {
             nlohmann::json j;
-            for (auto& [name, getter] : m_fields) {
+            for (auto &[name, getter] : m_fields)
+            {
                 j[name] = getter();
             }
             return j;
@@ -101,7 +108,8 @@ namespace cp {
          *
          * @ingroup SerializationCore
          */
-        std::vector<uint8_t> SerializeBSON() const {
+        std::vector<uint8_t> SerializeBSON() const
+        {
             return nlohmann::json::to_bson(Serialize());
         }
 
@@ -118,9 +126,12 @@ namespace cp {
          *
          * @ingroup SerializationCore
          */
-        void Deserialize(const nlohmann::json& j) {
-            for (auto& [name, setter] : m_deserializers) {
-                if (j.contains(name)) {
+        void Deserialize(const nlohmann::json &j)
+        {
+            for (auto &[name, setter] : m_deserializers)
+            {
+                if (j.contains(name))
+                {
                     setter(j.at(name));
                 }
             }
@@ -133,7 +144,8 @@ namespace cp {
          *
          * @ingroup SerializationCore
          */
-        void DeserializeBSON(const std::vector<uint8_t>& data) {
+        void DeserializeBSON(const std::vector<uint8_t> &data)
+        {
             Deserialize(nlohmann::json::from_bson(data));
         }
 
@@ -157,27 +169,41 @@ namespace cp {
          *
          * @ingroup SerializationCore
          */
-        template<typename T>
-        static nlohmann::json SerializeField(const T& value) {
-            if constexpr (std::is_base_of<SerializableBase, T>::value) {
+        template <typename T>
+        static nlohmann::json SerializeField(const T &value)
+        {
+            if constexpr (std::is_base_of<SerializableBase, T>::value)
+            {
                 return value.Serialize();
-            } else if constexpr (is_vector<T>::value || is_array<T>::value) {
+            }
+            else if constexpr (is_vector<T>::value || is_array<T>::value)
+            {
                 nlohmann::json arr = nlohmann::json::array();
-                for (const auto& el : value) {
+                for (const auto &el : value)
+                {
                     arr.push_back(SerializeField(el));
                 }
                 return arr;
-            } else if constexpr (is_map<T>::value || is_unordered_map<T>::value) {
+            }
+            else if constexpr (is_map<T>::value || is_unordered_map<T>::value)
+            {
                 nlohmann::json obj = nlohmann::json::object();
-                for (const auto& [k, v] : value) {
+                for (const auto &[k, v] : value)
+                {
                     obj[k] = SerializeField(v);
                 }
                 return obj;
-            } else if constexpr (is_optional<T>::value) {
+            }
+            else if constexpr (is_optional<T>::value)
+            {
                 return value.has_value() ? SerializeField(*value) : nlohmann::json(nullptr);
-            } else if constexpr (is_unique_ptr<T>::value) {
+            }
+            else if constexpr (is_unique_ptr<T>::value)
+            {
                 return value ? SerializeField(*value) : nlohmann::json(nullptr);
-            } else {
+            }
+            else
+            {
                 return value;
             }
         }
@@ -191,43 +217,64 @@ namespace cp {
          *
          * @ingroup SerializationCore
          */
-        template<typename T>
-        static void DeserializeField(T& field, const nlohmann::json& j) {
-            if constexpr (std::is_base_of<SerializableBase, T>::value) {
+        template <typename T>
+        static void DeserializeField(T &field, const nlohmann::json &j)
+        {
+            if constexpr (std::is_base_of<SerializableBase, T>::value)
+            {
                 field.Deserialize(j);
-            } else if constexpr (is_vector<T>::value) {
+            }
+            else if constexpr (is_vector<T>::value)
+            {
                 field.clear();
-                for (const auto& el : j) {
+                for (const auto &el : j)
+                {
                     typename T::value_type tmp;
                     DeserializeField(tmp, el);
                     field.push_back(std::move(tmp));
                 }
-            } else if constexpr (is_array<T>::value) {
+            }
+            else if constexpr (is_array<T>::value)
+            {
                 size_t idx = 0;
-                for (const auto& el : j) {
+                for (const auto &el : j)
+                {
                     DeserializeField(field[idx++], el);
                 }
-            } else if constexpr (is_map<T>::value || is_unordered_map<T>::value) {
+            }
+            else if constexpr (is_map<T>::value || is_unordered_map<T>::value)
+            {
                 field.clear();
-                for (auto it = j.begin(); it != j.end(); ++it) {
+                for (auto it = j.begin(); it != j.end(); ++it)
+                {
                     typename T::mapped_type tmp;
                     DeserializeField(tmp, it.value());
                     field[it.key()] = std::move(tmp);
                 }
-            } else if constexpr (is_optional<T>::value) {
-                if (j.is_null()) field.reset();
-                else {
+            }
+            else if constexpr (is_optional<T>::value)
+            {
+                if (j.is_null())
+                    field.reset();
+                else
+                {
                     typename T::value_type tmp;
                     DeserializeField(tmp, j);
                     field = std::move(tmp);
                 }
-            } else if constexpr (is_unique_ptr<T>::value) {
-                if (j.is_null()) field.reset();
-                else {
+            }
+            else if constexpr (is_unique_ptr<T>::value)
+            {
+                if (j.is_null())
+                    field.reset();
+                else
+                {
                     field = std::make_unique<typename T::element_type>();
                     DeserializeField(*field, j);
                 }
-            } else {
+            }
+            else
+            {
                 field = j.get<T>();
             }
         }
@@ -237,7 +284,7 @@ namespace cp {
         std::unordered_map<std::string, std::function<nlohmann::json()>> m_fields;
 
         /// Map of field-name → setter applying JSON to the field.
-        std::unordered_map<std::string, std::function<void(const nlohmann::json&)>> m_deserializers;
+        std::unordered_map<std::string, std::function<void(const nlohmann::json &)>> m_deserializers;
 
         // ---------------------------------------------------------------------
         // Internal Type Traits
@@ -251,28 +298,64 @@ namespace cp {
          */
 
         /** Detects std::vector */
-        template<typename T> struct is_vector : std::false_type {};
-        template<typename... Args> struct is_vector<std::vector<Args...>> : std::true_type {};
+        template <typename T>
+        struct is_vector : std::false_type
+        {
+        };
+        template <typename... Args>
+        struct is_vector<std::vector<Args...>> : std::true_type
+        {
+        };
 
         /** Detects std::array */
-        template<typename T> struct is_array : std::false_type {};
-        template<typename U, std::size_t N> struct is_array<std::array<U, N>> : std::true_type {};
+        template <typename T>
+        struct is_array : std::false_type
+        {
+        };
+        template <typename U, std::size_t N>
+        struct is_array<std::array<U, N>> : std::true_type
+        {
+        };
 
         /** Detects std::map */
-        template<typename T> struct is_map : std::false_type {};
-        template<typename... Args> struct is_map<std::map<Args...>> : std::true_type {};
+        template <typename T>
+        struct is_map : std::false_type
+        {
+        };
+        template <typename... Args>
+        struct is_map<std::map<Args...>> : std::true_type
+        {
+        };
 
         /** Detects std::unordered_map */
-        template<typename T> struct is_unordered_map : std::false_type {};
-        template<typename... Args> struct is_unordered_map<std::unordered_map<Args...>> : std::true_type {};
+        template <typename T>
+        struct is_unordered_map : std::false_type
+        {
+        };
+        template <typename... Args>
+        struct is_unordered_map<std::unordered_map<Args...>> : std::true_type
+        {
+        };
 
         /** Detects std::optional */
-        template<typename T> struct is_optional : std::false_type {};
-        template<typename... Args> struct is_optional<std::optional<Args...>> : std::true_type {};
+        template <typename T>
+        struct is_optional : std::false_type
+        {
+        };
+        template <typename... Args>
+        struct is_optional<std::optional<Args...>> : std::true_type
+        {
+        };
 
         /** Detects std::unique_ptr */
-        template<typename T> struct is_unique_ptr : std::false_type {};
-        template<typename U> struct is_unique_ptr<std::unique_ptr<U>> : std::true_type {};
+        template <typename T>
+        struct is_unique_ptr : std::false_type
+        {
+        };
+        template <typename U>
+        struct is_unique_ptr<std::unique_ptr<U>> : std::true_type
+        {
+        };
 
         /** @} */ // end of SerializationHelpers
     };

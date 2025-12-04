@@ -28,7 +28,8 @@
 #include "types.hpp"
 #include "export.hpp"
 
-namespace cp::algorithm {
+namespace cp::algorithm
+{
 
     /**
      * @class MD5
@@ -53,7 +54,7 @@ namespace cp::algorithm {
      *
      * @ingroup Crypto_MD5
      */
-    class CP_API MD5 
+    class CP_API MD5
     {
     public:
         /**
@@ -67,14 +68,14 @@ namespace cp::algorithm {
          * @param input Pointer to input data.
          * @param length Number of bytes to process.
          */
-        void update(const unsigned char* input, size_t length);
+        void update(const unsigned char *input, size_t length);
 
         /**
          * @brief Updates the hash with a string.
          *
          * @param input The string to process.
          */
-        void update(const string& input);
+        void update(const string &input);
 
         /**
          * @brief Finalizes the MD5 computation.
@@ -117,20 +118,19 @@ namespace cp::algorithm {
         /**
          * @brief Encodes 32-bit integers into bytes (little-endian).
          */
-        static void encode(const uint32_t* input, unsigned char* output, size_t length);
+        static void encode(const uint32_t *input, unsigned char *output, size_t length);
 
         /**
          * @brief Decodes bytes into 32-bit integers (little-endian).
          */
-        static void decode(const unsigned char* input, uint32_t* output, size_t length);
+        static void decode(const unsigned char *input, uint32_t *output, size_t length);
 
-        bool finalized;             ///< Whether finalize() has been called.
-        unsigned char buffer[64];   ///< Input buffer.
-        uint32_t count[2];          ///< Bit counters.
-        uint32_t state[4];          ///< Current MD5 state.
-        unsigned char digest[16];   ///< Final digest.
+        bool finalized;           ///< Whether finalize() has been called.
+        unsigned char buffer[64]; ///< Input buffer.
+        uint32_t count[2];        ///< Bit counters.
+        uint32_t state[4];        ///< Current MD5 state.
+        unsigned char digest[16]; ///< Final digest.
     };
-
 
     /// ================================
     /// HEX UTILITIES
@@ -142,7 +142,8 @@ namespace cp::algorithm {
      *
      * @ingroup Crypto_Utils
      */
-    namespace Hex {
+    namespace Hex
+    {
 
         /**
          * @brief Converts binary data to a hexadecimal string.
@@ -151,12 +152,12 @@ namespace cp::algorithm {
          * @param uppercase Whether to use uppercase A-F.
          * @param prefix Whether to prepend "0x".
          */
-        CP_API string ToHexString(std::span<const uint8_t> data, bool uppercase=false, bool prefix=false);
+        CP_API string ToHexString(std::span<const uint8_t> data, bool uppercase = false, bool prefix = false);
 
         /**
          * @brief Overload: vector version of ToHexString().
          */
-        CP_API string ToHexString(const std::vector<uint8_t>& data, bool uppercase=false, bool prefix=false);
+        CP_API string ToHexString(const std::vector<uint8_t> &data, bool uppercase = false, bool prefix = false);
 
         /**
          * @brief Converts a hex string into bytes.
@@ -172,7 +173,6 @@ namespace cp::algorithm {
         CP_API std::vector<uint8_t> FromHexStringPrefixed(string_view hex);
     }
 
-
     /// ================================
     /// BASE64 UTILITIES
     /// ================================
@@ -185,7 +185,8 @@ namespace cp::algorithm {
      *
      * @ingroup Crypto_Utils
      */
-    namespace Base64 {
+    namespace Base64
+    {
 
         /**
          * @brief Encodes bytes into Base64 text.
@@ -195,7 +196,7 @@ namespace cp::algorithm {
         /**
          * @brief Overload: vector version of Base64Encode().
          */
-        CP_API string Base64Encode(const std::vector<uint8_t>& bytes);
+        CP_API string Base64Encode(const std::vector<uint8_t> &bytes);
 
         /**
          * @brief Encodes text directly into Base64.

@@ -12,7 +12,8 @@
 #include <memory>
 #include "export.hpp"
 
-namespace cp {
+namespace cp
+{
     /**
      * @enum TaskPriority
      * @brief Defines scheduling priority for tasks submitted to the ThreadPool.
@@ -23,7 +24,12 @@ namespace cp {
      *
      * @ingroup Threading
      */
-    enum class CP_API TaskPriority { HIGH, NORMAL, LOW };
+    enum class CP_API TaskPriority
+    {
+        HIGH,
+        NORMAL,
+        LOW
+    };
 
     /**
      * @class ThreadPool
@@ -43,7 +49,8 @@ namespace cp {
      *
      * @ingroup Threading
      */
-    class CP_API ThreadPool {
+    class CP_API ThreadPool
+    {
     public:
         /**
          * @brief Constructs a thread pool with the specified number of worker threads.
@@ -60,10 +67,10 @@ namespace cp {
          */
         ~ThreadPool();
 
-        ThreadPool(const ThreadPool&) = delete;
-        ThreadPool& operator=(const ThreadPool&) = delete;
-        ThreadPool(ThreadPool&&) = delete;
-        ThreadPool& operator=(ThreadPool&&) = delete;
+        ThreadPool(const ThreadPool &) = delete;
+        ThreadPool &operator=(const ThreadPool &) = delete;
+        ThreadPool(ThreadPool &&) = delete;
+        ThreadPool &operator=(ThreadPool &&) = delete;
 
         /**
          * @brief Submits a callable task for asynchronous execution.
@@ -88,8 +95,8 @@ namespace cp {
          *
          * @ingroup Threading
          */
-        template<typename Func, typename... Args>
-        auto Submit(TaskPriority priority, Func&& f, Args&&... args)
+        template <typename Func, typename... Args>
+        auto Submit(TaskPriority priority, Func &&f, Args &&...args)
             -> std::future<decltype(f(args...))>;
 
         /**
@@ -110,14 +117,14 @@ namespace cp {
         void WorkerLoop(size_t index);
 
     private:
-        std::vector<std::deque<std::function<void()>>> m_queues;   ///< Per-thread task queues.
-        std::vector<std::mutex> m_mutexes;                         ///< One mutex per queue.
-        std::vector<std::condition_variable> m_conditions;         ///< One condition variable per queue.
-        std::vector<std::thread> m_workers;                        ///< Worker thread handles.
-        std::atomic_bool m_running;                                ///< Indicates whether the pool accepts tasks.
+        std::vector<std::deque<std::function<void()>>> m_queues; ///< Per-thread task queues.
+        std::vector<std::mutex> m_mutexes;                       ///< One mutex per queue.
+        std::vector<std::condition_variable> m_conditions;       ///< One condition variable per queue.
+        std::vector<std::thread> m_workers;                      ///< Worker thread handles.
+        std::atomic_bool m_running;                              ///< Indicates whether the pool accepts tasks.
 
-        std::mt19937 m_rng{ std::random_device{}() };              ///< RNG for queue selection.
-        std::uniform_int_distribution<size_t> m_dist;              ///< Distribution over worker index range.
+        std::mt19937 m_rng{std::random_device{}()};   ///< RNG for queue selection.
+        std::uniform_int_distribution<size_t> m_dist; ///< Distribution over worker index range.
     };
 
     // ---------------- Template Implementation ----------------
@@ -130,8 +137,8 @@ namespace cp {
      *
      * @see Submit()
      */
-    template<typename Func, typename... Args>
-    auto ThreadPool::Submit(TaskPriority priority, Func&& f, Args&&... args)
+    template <typename Func, typename... Args>
+    auto ThreadPool::Submit(TaskPriority priority, Func &&f, Args &&...args)
         -> std::future<decltype(f(args...))>
     {
         using ReturnType = decltype(f(args...));
@@ -140,17 +147,18 @@ namespace cp {
             throw std::runtime_error("ThreadPool is shut down");
 
         auto task = std::make_shared<std::packaged_task<ReturnType()>>(
-            std::bind(std::forward<Func>(f), std::forward<Args>(args)...)
-        );
+            std::bind(std::forward<Func>(f), std::forward<Args>(args)...));
         std::future<ReturnType> future = task->get_future();
 
         size_t idx = m_dist(m_rng);
         {
             std::lock_guard<std::mutex> lock(m_mutexes[idx]);
             if (priority == TaskPriority::HIGH)
-                m_queues[idx].emplace_front([task]{ (*task)(); });
+                m_queues[idx].emplace_front([task]
+                                            { (*task)(); });
             else
-                m_queues[idx].emplace_back([task]{ (*task)(); });
+                m_queues[idx].emplace_back([task]
+                                           { (*task)(); });
         }
 
         m_conditions[idx].notify_one();

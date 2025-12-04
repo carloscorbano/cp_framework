@@ -16,7 +16,8 @@
 #include <limits>
 #include "export.hpp"
 
-namespace cp::compression {
+namespace cp::compression
+{
 
     /**
      * @brief Compresses the given data using zlib and embeds the original size.
@@ -38,7 +39,7 @@ namespace cp::compression {
      * @ingroup Compression
      */
     [[nodiscard]] CP_API std::vector<uint8_t> CompressData(std::span<const uint8_t> data,
-                                                    int level = 1);
+                                                           int level = 1);
 
     /**
      * @brief Decompresses data produced by CompressData().
@@ -53,17 +54,16 @@ namespace cp::compression {
      * @return std::vector<uint8_t> A vector containing the decompressed data.
      *
      * @note Returns an empty vector if:
-     *       - the header is invalid  
-     *       - the input data is corrupted  
-     *       - decompression fails  
-     *       - declared size exceeds @p maxAllowedSize  
+     *       - the header is invalid
+     *       - the input data is corrupted
+     *       - decompression fails
+     *       - declared size exceeds @p maxAllowedSize
      *
      * @ingroup Compression
      */
     [[nodiscard]] CP_API std::vector<uint8_t> UncompressData(
         std::span<const uint8_t> compressedData,
-        uint64_t maxAllowedSize = 4ULL * 1024 * 1024 * 1024
-    );
+        uint64_t maxAllowedSize = 4ULL * 1024 * 1024 * 1024);
 
 } // namespace cp::compression
 

@@ -14,16 +14,18 @@
 #include <unistd.h>
 #endif
 
-namespace cp::security {
+namespace cp::security
+{
     // ---------------- Helper: CSPRNG ----------------
-    static void FillRandom(uint8_t* buffer, size_t size)
+    static void FillRandom(uint8_t *buffer, size_t size)
     {
-    #ifdef _WIN32
+#ifdef _WIN32
         if (BCryptGenRandom(nullptr, buffer, static_cast<ULONG>(size), BCRYPT_USE_SYSTEM_PREFERRED_RNG) != 0)
             throw std::runtime_error("Failed to generate cryptographic random bytes");
-    #else
+#else
         int fd = open("/dev/urandom", O_RDONLY);
-        if (fd < 0) throw std::runtime_error("Failed to open /dev/urandom");
+        if (fd < 0)
+            throw std::runtime_error("Failed to open /dev/urandom");
 
         size_t total_read = 0;
         while (total_read < size)
@@ -37,13 +39,14 @@ namespace cp::security {
             total_read += static_cast<size_t>(read_bytes);
         }
         close(fd);
-    #endif
+#endif
     }
 
     // ---------------- Encryption ----------------
-    std::vector<uint8_t> EncryptCBC(std::span<const uint8_t> data, const SecurityData& securityData)
+    std::vector<uint8_t> EncryptCBC(std::span<const uint8_t> data, const SecurityData &securityData)
     {
-        if (data.empty()) return {};
+        if (data.empty())
+            return {};
 
         mbedtls_aes_context aes{};
         mbedtls_aes_init(&aes);
@@ -70,7 +73,7 @@ namespace cp::security {
     }
 
     // ---------------- Decryption ----------------
-    std::vector<uint8_t> DecryptCBC(std::span<const uint8_t> encrypted, const SecurityData& securityData)
+    std::vector<uint8_t> DecryptCBC(std::span<const uint8_t> encrypted, const SecurityData &securityData)
     {
         if (encrypted.empty() || encrypted.size() % IV_SIZE != 0)
             throw std::runtime_error("Invalid encrypted data size");

@@ -46,7 +46,7 @@ namespace cp
      * - Equality check based on method ID and instance pointer
      */
     template <typename R, typename... Args>
-    class Delegate<R(Args...)>
+    class CP_API Delegate<R(Args...)>
     {
     public:
         using FuncType = std::function<R(Args...)>;
@@ -227,7 +227,7 @@ namespace cp
      * - Tracking call counts for each delegate
      */
     template <typename R, typename... Args>
-    class MulticastDelegate<R(Args...)>
+    class CP_API MulticastDelegate<R(Args...)>
     {
     public:
         using DelegateType = Delegate<R(Args...)>;

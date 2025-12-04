@@ -27,6 +27,8 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
     src/core/math.cpp
     src/core/events.cpp
     src/core/delegate.cpp
+    src/core/hybridEvents.cpp
+    src/core/diagnostics.cpp
 
     src/graphics/vulkan/vkTypes.cpp
 )

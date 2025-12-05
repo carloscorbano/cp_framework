@@ -13,6 +13,7 @@
 #include <string>
 #include <string_view>
 #include <filesystem>
+#include <memory>
 
 namespace cp
 {
@@ -52,4 +53,31 @@ namespace cp
     using string_view = std::string_view;
 
     using file_path = std::filesystem::path;
+
+    template <typename TYPE>
+    using UPTR = std::unique_ptr<TYPE>;
+
+    template <typename TYPE>
+    using SPTR = std::shared_ptr<TYPE>;
+
+    template <typename TYPE>
+    using WPTR = std::weak_ptr<TYPE>;
+
+    template <typename TYPE, typename... Args>
+    std::unique_ptr<TYPE> M_UPTR(Args &&...args)
+    {
+        return std::make_unique<TYPE>(std::forward<Args>(args)...);
+    }
+
+    template <typename TYPE, typename... Args>
+    std::shared_ptr<TYPE> M_SPTR(Args &&...args)
+    {
+        return std::make_shared<TYPE>(std::forward<Args>(args)...);
+    }
+
+    template <typename TYPE>
+    std::weak_ptr<TYPE> M_WPTR(const std::shared_ptr<TYPE> &sptr)
+    {
+        return std::weak_ptr<TYPE>(sptr);
+    }
 }

@@ -21,7 +21,7 @@ namespace cp
      * emission and asynchronous event queuing through the inherited
      * EventDispatcher functionality.
      */
-    class HybridEventDispatcher : public EventDispatcher
+    class CP_API HybridEventDispatcher : public EventDispatcher
     {
     public:
         /**

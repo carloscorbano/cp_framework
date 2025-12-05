@@ -10,11 +10,14 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+option(BUILD_TEST "Build the test application" ON)
+
 ##########################################################
 # LIB
 ##########################################################
 add_library(${CMAKE_PROJECT_NAME} SHARED 
     src/dllmain.cpp
+    
     src/core/debug.cpp 
     src/core/filesystem.cpp
     src/core/algorithm.cpp
@@ -29,6 +32,8 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
     src/core/delegate.cpp
     src/core/hybridEvents.cpp
     src/core/diagnostics.cpp
+
+    src/systems/eventSystem.cpp
 
     src/graphics/vulkan/vkTypes.cpp
 )
@@ -67,7 +72,7 @@ find_package(imgui CONFIG REQUIRED)
 ##########################################################
 target_include_directories(${CMAKE_PROJECT_NAME} 
     PUBLIC
-        include
+        ${PROJECT_SOURCE_DIR}/include
     PRIVATE
         ${Stb_INCLUDE_DIR}
 )
@@ -133,4 +138,15 @@ elseif(EXISTS ${PLANTUML_JAR})
     endif()
 else()
     message(STATUS "PlantUML not found. Install PlantUML in PATH.")
+endif()
+
+##########################################################
+# TEST APP
+##########################################################
+
+if(BUILD_TEST) 
+    set(BUILT_TEST_APP_NAME app)
+    add_executable(${BUILT_TEST_APP_NAME} test/test_main.cpp)
+    target_link_libraries(${BUILT_TEST_APP_NAME} ${CMAKE_PROJECT_NAME})
+    add_dependencies(${BUILT_TEST_APP_NAME} ${CMAKE_PROJECT_NAME})
 endif()

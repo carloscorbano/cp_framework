@@ -26,7 +26,7 @@ namespace cp::security
      * @brief Holds AES encryption key and initialization vector.
      * @ingroup Security
      */
-    struct CP_API SecurityData
+    struct SecurityData
     {
         std::array<uint8_t, KEY_SIZE> key{}; ///< AES-128 encryption key.
         std::array<uint8_t, IV_SIZE> iv{};   ///< AES initialization vector.
@@ -41,8 +41,8 @@ namespace cp::security
      *
      * @ingroup Security
      */
-    CP_API std::vector<uint8_t> EncryptCBC(std::span<const uint8_t> data,
-                                           const SecurityData &securityData);
+    std::vector<uint8_t> EncryptCBC(std::span<const uint8_t> data,
+                                    const SecurityData &securityData);
 
     /**
      * @brief Decrypts an AES-CBC encrypted buffer.
@@ -53,8 +53,8 @@ namespace cp::security
      *
      * @ingroup Security
      */
-    CP_API std::vector<uint8_t> DecryptCBC(std::span<const uint8_t> encrypted,
-                                           const SecurityData &securityData);
+    std::vector<uint8_t> DecryptCBC(std::span<const uint8_t> encrypted,
+                                    const SecurityData &securityData);
 
     /**
      * @brief Generates a random AES key (128-bit) and IV (128-bit).
@@ -63,7 +63,7 @@ namespace cp::security
      *
      * @ingroup Security
      */
-    CP_API SecurityData GenerateRandomKeyAndIV();
+    SecurityData GenerateRandomKeyAndIV();
 
 } // namespace cp::security
 

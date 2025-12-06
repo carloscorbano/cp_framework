@@ -20,7 +20,7 @@ namespace cp
      * Provides Start(), End() and a method to retrieve the elapsed time
      * in seconds. Internally uses steady_clock to avoid time jumps.
      */
-    class CP_API HighResolutionTimer
+    class HighResolutionTimer
     {
     public:
         /**
@@ -74,7 +74,7 @@ namespace cp
      *
      * It can optionally provide the full sample history.
      */
-    class CP_API TimerSampler
+    class TimerSampler
     {
     public:
         /**
@@ -131,7 +131,7 @@ namespace cp
      * - delta time information
      * - FPS metrics (current, average, min, max)
      */
-    struct CP_API FrameData
+    struct FrameData
     {
         uint64_t totalFrames = 0;
 
@@ -164,7 +164,7 @@ namespace cp
      * Supports an initial warmup period where frame measurements
      * are ignored to avoid initialization spikes.
      */
-    class CP_API FrameCounter
+    class FrameCounter
     {
     public:
         /**
@@ -260,7 +260,7 @@ namespace cp
      * - Named timers with aggregated statistics (TimerSampler)
      * - Per-frame begin/end tracking
      */
-    class CP_API DiagnosticsManager
+    class DiagnosticsManager
     {
     public:
         /**

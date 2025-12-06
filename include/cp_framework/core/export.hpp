@@ -1,15 +1,45 @@
 #pragma once
 
-#ifndef DLL_EXPORT
-#define DLL_EXPORT __declspec(dllexport)
-#endif
+#pragma once
 
-#ifndef DLL_IMPORT
-#define DLL_IMPORT __declspec(dllimport)
-#endif
-
-#ifdef CP_FRAMEWORK_EXPORTS
-#define CP_API DLL_EXPORT
+// Detect platform
+#if defined(_WIN32) || defined(_WIN64)
+#define CP_PLATFORM_WINDOWS 1
 #else
-#define CP_API DLL_IMPORT
+#define CP_PLATFORM_WINDOWS 0
+#endif
+
+// ------------------------------------------------------------
+// Visibility (export / import)
+// ------------------------------------------------------------
+#if CP_PLATFORM_WINDOWS
+// Windows: only exports what is explicitly marked
+#define CP_API_EXPORT __declspec(dllexport)
+#define CP_API_IMPORT __declspec(dllimport)
+#else
+// Linux / Mac: use GCC/Clang visibility attributes
+#define CP_API_EXPORT __attribute__((visibility("default")))
+#define CP_API_IMPORT __attribute__((visibility("default")))
+#endif
+
+// ------------------------------------------------------------
+// CP_API (main macro to expose symbols)
+// ------------------------------------------------------------
+#ifdef CP_BUILD_DLL
+// Building the DLL
+#define CP_API CP_API_EXPORT
+#else
+// Using the DLL
+#define CP_API CP_API_IMPORT
+#endif
+
+// ------------------------------------------------------------
+// Optional: hide internal symbols explicitly
+// ------------------------------------------------------------
+#if CP_PLATFORM_WINDOWS
+// Windows hides everything not exported
+#define CP_INTERNAL
+#else
+// On Linux/macOS, you can force hide visibility
+#define CP_INTERNAL __attribute__((visibility("hidden")))
 #endif

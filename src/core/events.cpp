@@ -2,7 +2,10 @@
 
 namespace cp
 {
-    EventDispatcher::EventDispatcher() : m_nextListenerID(1) {}
+    EventDispatcher::EventDispatcher() : m_nextListenerID(1)
+    {
+        StartAsync();
+    }
 
     EventDispatcher::~EventDispatcher()
     {
@@ -14,6 +17,8 @@ namespace cp
         m_running = true;
         m_thread = std::thread([this]()
                                { ProcessQueue(); });
+
+        m_cv.notify_one();
     }
 
     void EventDispatcher::StopAsync()

@@ -24,7 +24,7 @@ namespace cp
      *
      * @ingroup Threading
      */
-    enum class CP_API TaskPriority
+    enum class TaskPriority
     {
         HIGH,
         NORMAL,
@@ -49,7 +49,7 @@ namespace cp
      *
      * @ingroup Threading
      */
-    class CP_API ThreadPool
+    class ThreadPool
     {
     public:
         /**

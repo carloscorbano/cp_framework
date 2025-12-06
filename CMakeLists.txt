@@ -17,6 +17,7 @@ option(BUILD_TEST "Build the test application" ON)
 ##########################################################
 add_library(${CMAKE_PROJECT_NAME} SHARED 
     src/dllmain.cpp
+    src/framework.cpp
     
     src/core/debug.cpp 
     src/core/filesystem.cpp
@@ -32,10 +33,19 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
     src/core/delegate.cpp
     src/core/hybridEvents.cpp
     src/core/diagnostics.cpp
+    src/core/gameTime.cpp
 
     src/systems/eventSystem.cpp
 
+    src/thirdparty/glfw/glfw.inc.cpp
+    src/thirdparty/imgui/imgui.inc.cpp
+    src/thirdparty/stb/stb.inc.cpp
+    src/thirdparty/vma/vma.inc.cpp
+
     src/graphics/vulkan/vkTypes.cpp
+    src/graphics/window.cpp
+
+    src/world/world.cpp
 )
 
 ##########################################################
@@ -91,7 +101,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
         glm::glm
 )
 
-target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE CP_FRAMEWORK_EXPORTS)
+target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE CP_BUILD_DLL)
 
 ##########################################################
 # DOXYGEN

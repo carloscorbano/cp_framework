@@ -26,7 +26,7 @@ namespace cp
      *
      * All event types must derive from this class.
      */
-    struct CP_API Event
+    struct Event
     {
         virtual ~Event() = default;
     };
@@ -45,7 +45,7 @@ namespace cp
      * - Immediate (synchronous) event dispatch
      * - Asynchronous event queuing with thread processing
      */
-    class CP_API EventDispatcher
+    class EventDispatcher
     {
     public:
         /**

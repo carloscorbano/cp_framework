@@ -36,7 +36,7 @@ namespace cp::filesystem
      *
      * @ingroup MMap
      */
-    class CP_API MMapFile
+    class MMapFile
     {
     public:
         /** @brief Default constructor (creates an empty, unopened mapping). */
@@ -113,7 +113,7 @@ namespace cp::filesystem
      *
      * @ingroup Filesystem
      */
-    CP_API file_path NormalizePath(const file_path &path) noexcept;
+    file_path NormalizePath(const file_path &path) noexcept;
 
     /**
      * @brief Sets the global game data directory.
@@ -121,7 +121,7 @@ namespace cp::filesystem
      *
      * @ingroup Filesystem
      */
-    CP_API void SetGamePath(const file_path &path);
+    void SetGamePath(const file_path &path);
 
     /**
      * @brief Retrieves the global game data directory.
@@ -129,7 +129,7 @@ namespace cp::filesystem
      *
      * @ingroup Filesystem
      */
-    CP_API file_path GetGamePath();
+    file_path GetGamePath();
 
     // -------------------------------------------------------
     // File operations
@@ -146,7 +146,7 @@ namespace cp::filesystem
      *
      * @ingroup Filesystem
      */
-    CP_API std::shared_ptr<uint8_t[]> ReadBytes(const file_path &path, size_t &outSize);
+    std::shared_ptr<uint8_t[]> ReadBytes(const file_path &path, size_t &outSize);
 
     /**
      * @brief Reads file bytes and also returns a span view of the data.
@@ -158,7 +158,7 @@ namespace cp::filesystem
      *
      * @ingroup Filesystem
      */
-    CP_API std::pair<std::shared_ptr<uint8_t[]>, std::span<const uint8_t>> ReadBytesAuto(const file_path &path);
+    std::pair<std::shared_ptr<uint8_t[]>, std::span<const uint8_t>> ReadBytesAuto(const file_path &path);
 
     /**
      * @brief Writes binary data to a file.
@@ -169,7 +169,7 @@ namespace cp::filesystem
      *
      * @ingroup Filesystem
      */
-    CP_API void WriteBytes(const file_path &path, std::span<const uint8_t> data, bool append = false);
+    void WriteBytes(const file_path &path, std::span<const uint8_t> data, bool append = false);
 
     /**
      * @brief Checks if a file exists.
@@ -178,7 +178,7 @@ namespace cp::filesystem
      *
      * @ingroup Filesystem
      */
-    CP_API bool FileExists(const file_path &path) noexcept;
+    bool FileExists(const file_path &path) noexcept;
 
     /**
      * @brief Attempts to delete a file safely.
@@ -187,7 +187,7 @@ namespace cp::filesystem
      *
      * @ingroup Filesystem
      */
-    CP_API bool DeleteFileSafe(const file_path &path) noexcept;
+    bool DeleteFileSafe(const file_path &path) noexcept;
 
 } // namespace cp::filesystem
 

@@ -38,8 +38,8 @@ namespace cp::compression
      *
      * @ingroup Compression
      */
-    [[nodiscard]] CP_API std::vector<uint8_t> CompressData(std::span<const uint8_t> data,
-                                                           int level = 1);
+    [[nodiscard]] std::vector<uint8_t> CompressData(std::span<const uint8_t> data,
+                                                    int level = 1);
 
     /**
      * @brief Decompresses data produced by CompressData().
@@ -61,7 +61,7 @@ namespace cp::compression
      *
      * @ingroup Compression
      */
-    [[nodiscard]] CP_API std::vector<uint8_t> UncompressData(
+    [[nodiscard]] std::vector<uint8_t> UncompressData(
         std::span<const uint8_t> compressedData,
         uint64_t maxAllowedSize = 4ULL * 1024 * 1024 * 1024);
 

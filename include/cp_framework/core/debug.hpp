@@ -29,7 +29,7 @@ namespace cp
      *
      * Levels are used to filter messages and apply different color formatting.
      */
-    enum class CP_API LogLevel
+    enum class LogLevel
     {
         Info,    ///< Informational message.
         Success, ///< Indicates a successful operation.

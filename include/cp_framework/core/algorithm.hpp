@@ -54,7 +54,7 @@ namespace cp::algorithm
      *
      * @ingroup Crypto_MD5
      */
-    class CP_API MD5
+    class MD5
     {
     public:
         /**
@@ -152,12 +152,12 @@ namespace cp::algorithm
          * @param uppercase Whether to use uppercase A-F.
          * @param prefix Whether to prepend "0x".
          */
-        CP_API string ToHexString(std::span<const uint8_t> data, bool uppercase = false, bool prefix = false);
+        string ToHexString(std::span<const uint8_t> data, bool uppercase = false, bool prefix = false);
 
         /**
          * @brief Overload: vector version of ToHexString().
          */
-        CP_API string ToHexString(const std::vector<uint8_t> &data, bool uppercase = false, bool prefix = false);
+        string ToHexString(const std::vector<uint8_t> &data, bool uppercase = false, bool prefix = false);
 
         /**
          * @brief Converts a hex string into bytes.
@@ -165,12 +165,12 @@ namespace cp::algorithm
          * @param hex The input hex string.
          * @return Vector of decoded bytes.
          */
-        CP_API std::vector<uint8_t> FromHexString(string_view hex);
+        std::vector<uint8_t> FromHexString(string_view hex);
 
         /**
          * @brief Converts a hex string with optional "0x" prefix into bytes.
          */
-        CP_API std::vector<uint8_t> FromHexStringPrefixed(string_view hex);
+        std::vector<uint8_t> FromHexStringPrefixed(string_view hex);
     }
 
     /// ================================
@@ -191,37 +191,37 @@ namespace cp::algorithm
         /**
          * @brief Encodes bytes into Base64 text.
          */
-        CP_API string Base64Encode(std::span<const uint8_t> bytes);
+        string Base64Encode(std::span<const uint8_t> bytes);
 
         /**
          * @brief Overload: vector version of Base64Encode().
          */
-        CP_API string Base64Encode(const std::vector<uint8_t> &bytes);
+        string Base64Encode(const std::vector<uint8_t> &bytes);
 
         /**
          * @brief Encodes text directly into Base64.
          */
-        CP_API string Base64Encode(string_view text);
+        string Base64Encode(string_view text);
 
         /**
          * @brief Encodes bytes using URL-safe Base64 variant.
          */
-        CP_API string Base64EncodeUrlSafe(std::span<const uint8_t> bytes);
+        string Base64EncodeUrlSafe(std::span<const uint8_t> bytes);
 
         /**
          * @brief Encodes text using URL-safe Base64 variant.
          */
-        CP_API string Base64EncodeUrlSafe(string_view text);
+        string Base64EncodeUrlSafe(string_view text);
 
         /**
          * @brief Decodes a Base64 string into bytes.
          */
-        CP_API std::vector<uint8_t> Base64Decode(string_view encoded);
+        std::vector<uint8_t> Base64Decode(string_view encoded);
 
         /**
          * @brief Decodes a URL-safe Base64 string into bytes.
          */
-        CP_API std::vector<uint8_t> Base64DecodeUrlSafe(string_view encoded);
+        std::vector<uint8_t> Base64DecodeUrlSafe(string_view encoded);
     }
 
 } // namespace cp

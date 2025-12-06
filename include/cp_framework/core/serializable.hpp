@@ -50,7 +50,7 @@ namespace cp
      *
      * @ingroup SerializationCore
      */
-    class CP_API SerializableBase
+    class SerializableBase
     {
     public:
         /// Virtual destructor.

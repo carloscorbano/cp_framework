@@ -21,18 +21,18 @@ namespace cp
      * emission and asynchronous event queuing through the inherited
      * EventDispatcher functionality.
      */
-    class CP_API HybridEventDispatcher : public EventDispatcher
+    class HybridEventDispatcher : public EventDispatcher
     {
     public:
         /**
          * @brief Default constructor.
          */
-        HybridEventDispatcher() = default;
+        CP_API HybridEventDispatcher() = default;
 
         /**
          * @brief Default destructor.
          */
-        ~HybridEventDispatcher() = default;
+        CP_API ~HybridEventDispatcher() = default;
 
         // ---------------------------
         // Subscribe using Delegate
@@ -47,7 +47,7 @@ namespace cp
          * @return ListenerID A unique ID representing the registered listener.
          */
         template <typename EventType>
-        ListenerID Subscribe(const Delegate<void(const EventType &)> &del, int priority = 0)
+        CP_API_EXPORT ListenerID Subscribe(const Delegate<void(const EventType &)> &del, int priority = 0)
         {
             // Capture delegate in local variable
             Delegate<void(const EventType &)> localDel = del;
@@ -75,7 +75,7 @@ namespace cp
          * @return ListenerID A unique ID representing the registered listener.
          */
         template <typename EventType, typename F>
-        ListenerID Subscribe(F &&callback, int priority = 0)
+        CP_API_EXPORT ListenerID Subscribe(F &&callback, int priority = 0)
         {
             return this->EventDispatcher::template Subscribe<EventType>(
                 std::forward<F>(callback), priority);
@@ -92,7 +92,7 @@ namespace cp
          * @param id The listener ID obtained from Subscribe().
          */
         template <typename EventType>
-        void Unsubscribe(ListenerID id)
+        CP_API_EXPORT void Unsubscribe(ListenerID id)
         {
             this->EventDispatcher::Unsubscribe<EventType>(id);
         }
@@ -108,7 +108,7 @@ namespace cp
          * @param e The event instance.
          */
         template <typename EventType>
-        void Emit(const EventType &e)
+        CP_API_EXPORT void Emit(const EventType &e)
         {
             this->EventDispatcher::Emit<EventType>(e);
         }
@@ -124,7 +124,7 @@ namespace cp
          * @param e The event instance.
          */
         template <typename EventType>
-        void QueueEvent(const EventType &e)
+        CP_API_EXPORT void QueueEvent(const EventType &e)
         {
             this->EventDispatcher::QueueEvent<EventType>(e);
         }

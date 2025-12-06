@@ -5,10 +5,11 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #define GLM_ENABLE_EXPERIMENTAL
 
-#include <glm/glm.hpp>
 #include <cstdint>
+#include <glm/glm.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
+#include <glm/gtx/norm.hpp>
 
 #include <string>
 #include <string_view>
@@ -81,3 +82,20 @@ namespace cp
         return std::weak_ptr<TYPE>(sptr);
     }
 }
+
+#define MAKE_SINGLETON(TypeName)  \
+    static TypeName &Get()        \
+    {                             \
+        static TypeName instance; \
+        return instance;          \
+    }
+
+#define CP_RULE_OF_FIVE_DELETE(TypeName)            \
+    /* Copy Constructor */                          \
+    TypeName(const TypeName &) = delete;            \
+    /* Copy Assignment  */                          \
+    TypeName &operator=(const TypeName &) = delete; \
+    /* Move Constructor */                          \
+    TypeName(TypeName &&) noexcept = delete;        \
+    /* Move Assignment */                           \
+    TypeName &operator=(TypeName &&) noexcept = delete;

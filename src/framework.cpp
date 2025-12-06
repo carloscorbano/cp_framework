@@ -8,6 +8,7 @@ namespace cp
 {
     Framework::Framework()
     {
+        ScopedLog("FRAMEWORK", "Creating framework class", "Successfully created framework class");
         // singletons initialization.
         EventSystem::Get();
         GameTime::Get();
@@ -15,11 +16,12 @@ namespace cp
 
     Framework::~Framework()
     {
+        ScopedLog("FRAMEWORK", "Destroying framework class", "Successfully destroyed framework class");
     }
 
     void Framework::Init()
     {
-        LOG_INFO("[FRAMEWORK] Framework initialization.");
+        ScopedLog("FRAMEWORK", "Starting to initialize.", "Successfully initialized.");
 
         // Create modules
         WindowInfo createInfo{.width = 1320, .height = 780, .title = "CP_FRAMEWORK", .mode = WindowMode::Windowed, .vsync = true};
@@ -27,15 +29,13 @@ namespace cp
 
         // set init = true
         m_initializated = true;
-
-        LOG_SUCCESS("[FRAMEWORK] Framework successfully initialized!");
     }
 
     void Framework::Run()
     {
         assert(m_initializated && "Init function must be called before Run func");
 
-        LOG_INFO("[FRAMEWORK] Framework running.");
+        ScopedLog("FRAMEWORK", "Running game loop.", "Successfully stopped game loop.");
         m_isRunning.store(true);
 
         while (m_isRunning.load())
@@ -75,7 +75,5 @@ namespace cp
             // -----------------------------
             // do late update...
         }
-
-        LOG_INFO("[FRAMEWORK] Game loop terminated... starting to clean...");
     }
 } // namespace cp

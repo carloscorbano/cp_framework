@@ -223,7 +223,7 @@ namespace cp
         GLFWwindow *m_wndHandle = nullptr; ///< Pointer to the GLFW window
         WindowInfo m_wndInfo;              ///< Current window information
 
-        int m_prevX, m_prevY, m_prevW, m_prevH; ///< Previous window position and size
+        int m_prevX = 0, m_prevY = 0, m_prevW = 0, m_prevH = 0; ///< Previous window position and size
 
         std::atomic<bool> m_sizeChanged{false};                       ///< Flag set when window size changed
         std::chrono::steady_clock::time_point m_sizeChangedTimePoint; ///< Time of last size change

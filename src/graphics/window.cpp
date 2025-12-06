@@ -6,10 +6,14 @@ namespace cp
     Window::Window(const WindowInfo &createInfo)
         : m_wndInfo(createInfo)
     {
+        ScopedLog("WINDOW", "Creating window class.", "Successfully created window class");
+
         if (!glfwInit())
         {
             LOG_THROW("[WINDOW] Failed to initialize GLFW!");
         }
+
+        LOG_SUCCESS("[WINDOW] Successfully initializated GLFW");
 
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
@@ -18,11 +22,15 @@ namespace cp
             LOG_THROW("[WINDOW] Vulkan is not supported!");
         }
 
+        LOG_SUCCESS("[WINDOW] Vulkan supported!");
+
         m_wndHandle = glfwCreateWindow(createInfo.width, createInfo.height, createInfo.title, 0, 0);
         if (!m_wndHandle)
         {
             LOG_THROW("[WINDOW] Failed to create glfw window!");
         }
+
+        LOG_SUCCESS("[WINDOW] Successfully created glfw window");
 
         glfwSetWindowUserPointer(m_wndHandle, this);
         glfwSetWindowSizeCallback(m_wndHandle, GLFW_WindowSizeCallback);
@@ -30,6 +38,11 @@ namespace cp
         glfwSetWindowFocusCallback(m_wndHandle, GLFW_WindowFocusCallback);
 
         centerWindowOnScreen(m_wndHandle);
+
+        m_prevW = createInfo.width;
+        m_prevH = createInfo.height;
+        glfwGetWindowPos(m_wndHandle, &m_prevX, &m_prevY);
+
         setWindowMode(createInfo.mode);
 
         m_isFocused.store(glfwGetWindowAttrib(m_wndHandle, GLFW_FOCUSED) == GLFW_TRUE);
@@ -37,6 +50,7 @@ namespace cp
 
     Window::~Window()
     {
+        ScopedLog("WINDOW", "Destroying window class", "Successfully destroyed window class!");
         if (m_wndHandle)
         {
             glfwDestroyWindow(m_wndHandle);

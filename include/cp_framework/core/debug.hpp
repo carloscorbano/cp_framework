@@ -161,3 +161,26 @@ namespace cp
 #define LOG_THROW(fmt_str, ...) ::cp::Debug::Throw(fmt_str, ##__VA_ARGS__)
 
 /** @} */ // end of Logging_Macros group
+
+struct ScopedLog
+{
+    ScopedLog(std::string_view name, std::string_view onCreateMsg, std::string_view onDestroyMsg)
+        : name(name), onDestroyMsg(onDestroyMsg)
+    {
+        start = std::chrono::steady_clock::now();
+        LOG_INFO("[{}] {}", name, onCreateMsg);
+    }
+
+    ~ScopedLog()
+    {
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+                           std::chrono::steady_clock::now() - start)
+                           .count();
+        LOG_SUCCESS("[{}] {} (elapsed: {} ms)", name, onDestroyMsg, elapsed);
+    }
+
+private:
+    std::string_view name;
+    std::string_view onDestroyMsg;
+    std::chrono::steady_clock::time_point start;
+};

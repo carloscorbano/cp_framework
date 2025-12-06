@@ -28,12 +28,11 @@ namespace cp
         glfwSetWindowSizeCallback(m_wndHandle, GLFW_WindowSizeCallback);
         glfwSetWindowPosCallback(m_wndHandle, GLFW_WindowPosCallback);
         glfwSetWindowFocusCallback(m_wndHandle, GLFW_WindowFocusCallback);
-        glfwSetWindowIconifyCallback(m_wndHandle, GLFW_WindowIconifyCallback);
-        glfwSetWindowMaximizeCallback(m_wndHandle, GLFW_WindowMaximizeCallback);
-        glfwSetWindowCloseCallback(m_wndHandle, GLFW_WindowCloseCallback);
 
         centerWindowOnScreen(m_wndHandle);
         setWindowMode(createInfo.mode);
+
+        m_isFocused.store(glfwGetWindowAttrib(m_wndHandle, GLFW_FOCUSED) == GLFW_TRUE);
     }
 
     Window::~Window()
@@ -67,6 +66,11 @@ namespace cp
     void Window::Update()
     {
         glfwPollEvents();
+
+        if (m_sizeChanged.load() && std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - m_sizeChangedTimePoint) >= std::chrono::milliseconds(100))
+        {
+            m_sizeChanged.store(false);
+        }
     }
 
     bool Window::ShouldClose() const
@@ -92,17 +96,7 @@ namespace cp
 
     bool Window::IsFocused() const
     {
-        return glfwGetWindowAttrib(m_wndHandle, GLFW_FOCUSED) == GLFW_TRUE;
-    }
-
-    bool Window::IsMinimized() const
-    {
-        return glfwGetWindowAttrib(m_wndHandle, GLFW_ICONIFIED) == GLFW_TRUE;
-    }
-
-    bool Window::IsVisible() const
-    {
-        return glfwGetWindowAttrib(m_wndHandle, GLFW_VISIBLE) == GLFW_TRUE;
+        return m_isFocused.load();
     }
 
     void Window::SetTitle(const std::string &title)
@@ -148,6 +142,11 @@ namespace cp
 
     void Window::GLFW_WindowSizeCallback(GLFWwindow *window, int width, int height)
     {
+        if (auto self = reinterpret_cast<Window *>(glfwGetWindowUserPointer(window)))
+        {
+            self->m_sizeChanged.store(true);
+            self->m_sizeChangedTimePoint = std::chrono::steady_clock::now();
+        }
     }
 
     void Window::GLFW_WindowPosCallback(GLFWwindow *window, int xpos, int ypos)
@@ -156,18 +155,10 @@ namespace cp
 
     void Window::GLFW_WindowFocusCallback(GLFWwindow *window, int focused)
     {
-    }
-
-    void Window::GLFW_WindowIconifyCallback(GLFWwindow *window, int iconified)
-    {
-    }
-
-    void Window::GLFW_WindowMaximizeCallback(GLFWwindow *window, int maximized)
-    {
-    }
-
-    void Window::GLFW_WindowCloseCallback(GLFWwindow *window)
-    {
+        if (auto self = reinterpret_cast<Window *>(glfwGetWindowUserPointer(window)))
+        {
+            self->m_isFocused = focused;
+        }
     }
 
     GLFWmonitor *Window::getMonitorForWindow(GLFWwindow *window) const

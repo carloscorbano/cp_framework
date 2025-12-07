@@ -1,5 +1,7 @@
 #include "cp_framework/window/window.hpp"
 #include "cp_framework/debug/debug.hpp"
+#include "cp_framework/window/windowEvents.hpp"
+#include "cp_framework/events/eventSystem.hpp"
 
 namespace cp
 {
@@ -84,6 +86,14 @@ namespace cp
         if (m_sizeChanged.load() && std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - m_sizeChangedTimePoint) >= std::chrono::milliseconds(100))
         {
             m_sizeChanged.store(false);
+
+            glfwGetWindowSize(GetWindowHandle(), &m_wndInfo.width, &m_wndInfo.height);
+
+            onWindowSizeChangedEvent e{};
+            e.newWidth = m_wndInfo.width;
+            e.newHeight = m_wndInfo.height;
+
+            EventSystem::Get().Emit<onWindowSizeChangedEvent>(e);
         }
     }
 
@@ -172,6 +182,11 @@ namespace cp
         if (auto self = reinterpret_cast<Window *>(glfwGetWindowUserPointer(window)))
         {
             self->m_isFocused = focused;
+
+            onWindowFocusedEvent e{};
+            e.focused = focused;
+
+            EventSystem::Get().Emit<onWindowFocusedEvent>(e);
         }
     }
 

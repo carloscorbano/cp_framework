@@ -2,6 +2,7 @@
 
 #include "cp_framework/thirdparty/glfw/glfw.inc.hpp"
 #include "cp_framework/core/types.hpp"
+#include "cp_framework/core/export.hpp"
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -33,28 +34,28 @@ namespace cp
         void update();
 
         // === Consulta de estados ===
-        bool isKeyDown(int key) const;
-        bool isKeyPressed(int key) const;
-        bool isKeyReleased(int key) const;
+        CP_API bool isKeyDown(int key) const;
+        CP_API bool isKeyPressed(int key) const;
+        CP_API bool isKeyReleased(int key) const;
 
-        bool isMouseButtonDown(int button) const;
-        bool isMouseButtonPressed(int button) const;
-        bool isMouseButtonReleased(int button) const;
+        CP_API bool isMouseButtonDown(int button) const;
+        CP_API bool isMouseButtonPressed(int button) const;
+        CP_API bool isMouseButtonReleased(int button) const;
 
-        bool isActionDown(const string &action) const;
-        bool isActionPressed(const string &action) const;
-        bool isActionReleased(const string &action) const;
+        CP_API bool isActionDown(const string &action) const;
+        CP_API bool isActionPressed(const string &action) const;
+        CP_API bool isActionReleased(const string &action) const;
 
-        void getMousePosition(double &x, double &y) const;
-        const GamepadState &getGamepadState(int jid) const;
+        CP_API void getMousePosition(double &x, double &y) const;
+        CP_API const GamepadState &getGamepadState(int jid) const;
 
         // === Bindings de ações ===
-        void bindKey(const string &action, int key);
-        void bindMouseButton(const string &action, int button);
-        void bindGamepadButton(const string &action, int jid, int button);
+        CP_API void bindKey(const string &action, int key);
+        CP_API void bindMouseButton(const string &action, int button);
+        CP_API void bindGamepadButton(const string &action, int jid, int button);
 
-        void clearBindings();
-        void clearBinding(const string &action);
+        CP_API void clearBindings();
+        CP_API void clearBinding(const string &action);
 
         // === Callbacks ===
         std::function<void(const string &action, KeyState state)> onAction;

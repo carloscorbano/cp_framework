@@ -86,6 +86,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
     # WINDOW        #
     #################
     src/window/window.cpp
+    src/window/windowEvents.cpp
 
     #################
     # INPUT         #

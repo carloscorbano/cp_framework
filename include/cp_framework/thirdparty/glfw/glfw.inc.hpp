@@ -2,3 +2,13 @@
 
 #include <vulkan/vulkan.h>
 #include <glfw/glfw3.h>
+
+#define CP_VK_DELETE_HANDLE(HANDLE, CALL) \
+    do                                    \
+    {                                     \
+        if ((HANDLE) != VK_NULL_HANDLE)   \
+        {                                 \
+            CALL;                         \
+            (HANDLE) = VK_NULL_HANDLE;    \
+        }                                 \
+    } while (0)

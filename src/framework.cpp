@@ -7,6 +7,7 @@
 #include "cp_framework/window/window.hpp"
 #include "cp_framework/threading/threadPool.hpp"
 #include "cp_framework/input/inputManager.hpp"
+#include "cp_framework/vulkan/vkManager.hpp"
 
 namespace cp
 {
@@ -33,6 +34,7 @@ namespace cp
         m_threadPool = M_UPTR<ThreadPool>();
         m_diag = M_UPTR<DiagnosticsManager>();
         m_input = M_UPTR<InputManager>(m_window->GetWindowHandle());
+        m_vkManager = M_UPTR<VkManager>(m_window->GetWindowHandle());
 
         // set init = true
         m_initializated = true;

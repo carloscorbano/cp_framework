@@ -13,6 +13,7 @@ namespace cp
     class ThreadPool;
     class DiagnosticsManager;
     class InputManager;
+    class VkManager;
 
     /**
      * @brief Framework class, this class controll the framework creation and game loop
@@ -48,5 +49,6 @@ namespace cp
         UPTR<ThreadPool> m_threadPool;
         UPTR<DiagnosticsManager> m_diag;
         UPTR<InputManager> m_input;
+        UPTR<VkManager> m_vkManager;
     };
 } // namespace cp

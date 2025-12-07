@@ -99,3 +99,7 @@ namespace cp
     TypeName(TypeName &&) noexcept = delete;        \
     /* Move Assignment */                           \
     TypeName &operator=(TypeName &&) noexcept = delete;
+
+#define CP_HANDLE_CONVERSION(HANDLE_TYPE, MEMBER)            \
+    explicit operator HANDLE_TYPE() const { return MEMBER; } \
+    HANDLE_TYPE get() const { return MEMBER; }

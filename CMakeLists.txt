@@ -89,6 +89,19 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
     src/window/windowEvents.cpp
 
     #################
+    # VULKAN        #
+    #################
+    src/vulkan/vkManager.cpp
+    src/vulkan/utils.cpp
+    src/vulkan/instance.cpp
+    src/vulkan/surface.cpp
+    src/vulkan/debugMessenger.cpp
+    src/vulkan/physicalDevice.cpp
+    src/vulkan/device.cpp
+    src/vulkan/vma.cpp
+    src/vulkan/swapchain.cpp
+
+    #################
     # INPUT         #
     #################
     src/input/inputManager.cpp

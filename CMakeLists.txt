@@ -88,6 +88,11 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
     src/window/window.cpp
 
     #################
+    # INPUT         #
+    #################
+    src/input/inputManager.cpp
+
+    #################
     # WORLD         #
     #################
     src/world/world.cpp

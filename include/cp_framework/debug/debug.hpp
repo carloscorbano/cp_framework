@@ -6,6 +6,7 @@
 #include <ostream>
 #include <mutex>
 #include "cp_framework/core/export.hpp"
+#include "cp_framework/core/types.hpp"
 
 /**
  * @defgroup Logging Logging System
@@ -64,7 +65,7 @@ namespace cp
         static void SetAutoFlush(bool enabled);
 
         /** @brief Redirects all output to a file. */
-        static void SetLogFile(const std::string &filepath);
+        static void SetLogFile(const string &filepath);
 
         /** @brief Restores output back to stdout. */
         static void ResetOutputToConsole();
@@ -85,7 +86,7 @@ namespace cp
             if (level < g_minLevel)
                 return;
 
-            const std::string msg = fmt::format(format, std::forward<Args>(args)...);
+            const string msg = fmt::format(format, std::forward<Args>(args)...);
             Print(level, msg);
         }
 
@@ -99,7 +100,7 @@ namespace cp
         template <typename... Args>
         static void Throw(fmt::format_string<Args...> format, Args &&...args)
         {
-            const std::string msg = fmt::format(format, std::forward<Args>(args)...);
+            const string msg = fmt::format(format, std::forward<Args>(args)...);
             Print(LogLevel::Error, msg);
             throw std::runtime_error(msg);
         }
@@ -111,7 +112,7 @@ namespace cp
          *
          * @ingroup Logging
          */
-        static void Print(LogLevel level, const std::string &message);
+        static void Print(LogLevel level, const string &message);
 
     private:
         static inline bool g_colorEnabled = true; ///< ANSI color toggle
@@ -164,7 +165,7 @@ namespace cp
 
 struct ScopedLog
 {
-    ScopedLog(std::string_view name, std::string_view onCreateMsg, std::string_view onDestroyMsg)
+    ScopedLog(cp::string_view name, cp::string_view onCreateMsg, cp::string_view onDestroyMsg)
         : name(name), onDestroyMsg(onDestroyMsg)
     {
         start = std::chrono::steady_clock::now();
@@ -180,7 +181,7 @@ struct ScopedLog
     }
 
 private:
-    std::string_view name;
-    std::string_view onDestroyMsg;
+    cp::string_view name;
+    cp::string_view onDestroyMsg;
     std::chrono::steady_clock::time_point start;
 };

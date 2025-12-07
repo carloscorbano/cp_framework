@@ -54,7 +54,7 @@ namespace cp
             }
         }
 
-        static std::string GetTimestamp()
+        static string GetTimestamp()
         {
             using namespace std::chrono;
             auto now = system_clock::now();
@@ -88,14 +88,14 @@ namespace cp
         }
     }
 
-    void Debug::Print(LogLevel level, const std::string &message)
+    void Debug::Print(LogLevel level, const string &message)
     {
         std::lock_guard<std::mutex> lock(g_mutex);
 
         const char *color = GetColor(level, g_colorEnabled);
         const char *reset = g_colorEnabled ? "\033[0m" : "";
         const char *levelStr = GetLevelName(level);
-        std::string timestamp = GetTimestamp();
+        string timestamp = GetTimestamp();
 
         auto &out = g_outputStream ? *g_outputStream : std::cout;
         out << color << timestamp << " [" << levelStr << "] " << message << reset << "\n";
@@ -121,7 +121,7 @@ namespace cp
         g_autoFlush = enabled;
     }
 
-    void Debug::SetLogFile(const std::string &filepath)
+    void Debug::SetLogFile(const string &filepath)
     {
         fileStream = std::make_unique<std::ofstream>(filepath, std::ios::app);
         if (fileStream && fileStream->is_open())

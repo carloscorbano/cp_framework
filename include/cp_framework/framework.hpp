@@ -10,6 +10,9 @@ namespace cp
     // FORWARD DECLARATIONS
     //-------------------------
     class Window;
+    class ThreadPool;
+    class DiagnosticsManager;
+    class InputManager;
 
     /**
      * @brief Framework class, this class controll the framework creation and game loop
@@ -33,9 +36,17 @@ namespace cp
         void Run();
 
     private:
+        void update(const f64 &deltaTime);
+        void fixedUpdate(const f64 &fixedTime);
+        void lateUpdate(const f64 &deltaTime);
+
+    private:
         bool m_initializated{false};
         std::atomic<bool> m_isRunning{false};
 
         UPTR<Window> m_window;
+        UPTR<ThreadPool> m_threadPool;
+        UPTR<DiagnosticsManager> m_diag;
+        UPTR<InputManager> m_input;
     };
 } // namespace cp

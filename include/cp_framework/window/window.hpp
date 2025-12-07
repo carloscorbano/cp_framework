@@ -121,7 +121,7 @@ namespace cp
          *
          * @param title New window title string.
          */
-        void SetTitle(const std::string &title);
+        void SetTitle(const string &title);
 
         /**
          * @brief Sets the window opacity (alpha).
@@ -147,9 +147,9 @@ namespace cp
         /**
          * @brief Retrieves the current clipboard text.
          *
-         * @return Clipboard contents as a std::string.
+         * @return Clipboard contents as a string.
          */
-        std::string GetClipboardText() const;
+        string GetClipboardText() const;
 
         /**
          * @brief Retrieves the content scale of the window for HiDPI displays.

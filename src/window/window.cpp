@@ -105,7 +105,7 @@ namespace cp
     f32 Window::GetAspectRatio() const
     {
         int w = GetWidth(), h = GetHeight();
-        return h != 0 ? float(w) / h : 1.f;
+        return h != 0 ? f32(w) / h : 1.f;
     }
 
     bool Window::IsFocused() const
@@ -113,7 +113,7 @@ namespace cp
         return m_isFocused.load();
     }
 
-    void Window::SetTitle(const std::string &title)
+    void Window::SetTitle(const string &title)
     {
         glfwSetWindowTitle(m_wndHandle, title.c_str());
     }
@@ -133,7 +133,7 @@ namespace cp
         glfwSetClipboardString(m_wndHandle, text);
     }
 
-    std::string Window::GetClipboardText() const
+    string Window::GetClipboardText() const
     {
         const char *txt = glfwGetClipboardString(m_wndHandle);
         return txt ? txt : "";

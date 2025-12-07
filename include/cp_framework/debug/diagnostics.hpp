@@ -9,6 +9,7 @@
 #include <chrono>
 #include <mutex>
 #include "cp_framework/core/export.hpp"
+#include "cp_framework/core/types.hpp"
 #include "debug.hpp"
 
 namespace cp
@@ -282,7 +283,7 @@ namespace cp
          *
          * @param name Unique name of the timer.
          */
-        void StartTimer(const std::string &name)
+        void StartTimer(const string &name)
         {
             m_timerStartTimes[name] = Now();
         }
@@ -292,7 +293,7 @@ namespace cp
          *
          * @param name Timer name.
          */
-        void StopTimer(const std::string &name)
+        void StopTimer(const string &name)
         {
             auto it = m_timerStartTimes.find(name);
             if (it == m_timerStartTimes.end())
@@ -316,7 +317,7 @@ namespace cp
          * @param name Sampler name.
          * @return Reference to sampler or a dummy empty sampler.
          */
-        const TimerSampler &GetTimerSampler(const std::string &name) const
+        const TimerSampler &GetTimerSampler(const string &name) const
         {
             static TimerSampler dummy;
             auto it = m_timerSamplers.find(name);
@@ -328,9 +329,9 @@ namespace cp
          *
          * @return Human-readable diagnostics string.
          */
-        std::string Summary() const
+        string Summary() const
         {
-            std::string out;
+            string out;
             const auto &fd = m_frameCounter.GetFrameData();
 
             out += "FPS " +
@@ -361,7 +362,7 @@ namespace cp
         }
 
         FrameCounter m_frameCounter;
-        std::unordered_map<std::string, uint64_t> m_timerStartTimes;
-        std::unordered_map<std::string, TimerSampler> m_timerSamplers;
+        std::unordered_map<string, uint64_t> m_timerStartTimes;
+        std::unordered_map<string, TimerSampler> m_timerSamplers;
     };
 }

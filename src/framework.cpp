@@ -1,8 +1,12 @@
 #include "cp_framework/framework.hpp"
+
 #include "cp_framework/debug/debug.hpp"
+#include "cp_framework/debug/diagnostics.hpp"
 #include "cp_framework/events/eventSystem.hpp"
 #include "cp_framework/time/gameTime.hpp"
 #include "cp_framework/window/window.hpp"
+#include "cp_framework/threading/threadPool.hpp"
+#include "cp_framework/input/inputManager.hpp"
 
 namespace cp
 {
@@ -26,6 +30,9 @@ namespace cp
         // Create modules
         WindowInfo createInfo{.width = 1320, .height = 780, .title = "CP_FRAMEWORK", .mode = WindowMode::Windowed, .vsync = true};
         m_window = M_UPTR<Window>(createInfo);
+        m_threadPool = M_UPTR<ThreadPool>();
+        m_diag = M_UPTR<DiagnosticsManager>();
+        m_input = M_UPTR<InputManager>(m_window->GetWindowHandle());
 
         // set init = true
         m_initializated = true;
@@ -40,8 +47,10 @@ namespace cp
 
         while (m_isRunning.load())
         {
+            m_diag->BeginFrame();
+
             // -----------------------------
-            // Update window
+            // modules update
             // -----------------------------
             m_window->Update();
             if (m_window->ShouldClose())
@@ -49,6 +58,8 @@ namespace cp
                 m_isRunning.store(false);
                 break;
             }
+
+            m_input->update();
 
             // -----------------------------
             // Update global game time
@@ -60,20 +71,38 @@ namespace cp
             // -----------------------------
             // Per-frame update
             // -----------------------------
-            // Update(dt);
+            update(dt);
 
             // -----------------------------
             // Fixed update (physics, logic)
             // -----------------------------
             while (gameTime.DoFixedUpdate())
             {
-                // FixedUpdate(gameTime.FixedDeltaTime())
+                fixedUpdate(gameTime.FixedDeltaTime());
             }
 
             // -----------------------------
             // Late update / rendering
             // -----------------------------
-            // do late update...
+            lateUpdate(dt);
+
+            m_diag->EndFrame();
         }
     }
+
+    void Framework::update(const f64 &deltaTime)
+    {
+        (void)deltaTime;
+    }
+
+    void Framework::fixedUpdate(const f64 &fixedTime)
+    {
+        (void)fixedTime;
+    }
+
+    void Framework::lateUpdate(const f64 &deltaTime)
+    {
+        (void)deltaTime;
+    }
+
 } // namespace cp

@@ -7,11 +7,11 @@
 namespace cp::math
 {
 
-    constexpr float PI = glm::pi<float>();
-    constexpr float TWO_PI = glm::two_pi<float>();
-    constexpr float HALF_PI = glm::half_pi<float>();
-    constexpr float DEG2RAD = PI / 180.0f;
-    constexpr float RAD2DEG = 180.0f / PI;
+    constexpr f32 PI = glm::pi<f32>();
+    constexpr f32 TWO_PI = glm::two_pi<f32>();
+    constexpr f32 HALF_PI = glm::half_pi<f32>();
+    constexpr f32 DEG2RAD = PI / 180.0f;
+    constexpr f32 RAD2DEG = 180.0f / PI;
 
     /**
      * @brief Normalize a 2D vector.
@@ -30,9 +30,9 @@ namespace cp::math
      * @param eps Minimum safe length threshold.
      * @return vec2 Normalized vector or original vector if too small.
      */
-    inline vec2 safe_normalize(const vec2 &v, float eps = 1e-6f)
+    inline vec2 safe_normalize(const vec2 &v, f32 eps = 1e-6f)
     {
-        float len = glm::length(v);
+        f32 len = glm::length(v);
         if (len > eps)
             return v / len;
         return v; // return unchanged (zero or near-zero)
@@ -43,9 +43,9 @@ namespace cp::math
      *
      * Works the same way as safe_normalize(vec2).
      */
-    inline vec3 safe_normalize(const vec3 &v, float eps = 1e-6f)
+    inline vec3 safe_normalize(const vec3 &v, f32 eps = 1e-6f)
     {
-        float len = glm::length(v);
+        f32 len = glm::length(v);
         if (len > eps)
             return v / len;
         return v;

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include <vector>
 #include <array>
 #include <map>
@@ -11,6 +10,7 @@
 #include <functional>
 #include <nlohmann/json.hpp>
 #include "cp_framework/core/export.hpp"
+#include "cp_framework/core/types.hpp"
 
 /**
  * @defgroup Serialization Serialization System
@@ -70,7 +70,7 @@ namespace cp
          * @ingroup SerializationCore
          */
         template <typename T>
-        void RegisterField(const std::string &name, T &field)
+        void RegisterField(const string &name, T &field)
         {
             m_fields[name] = [&field]() -> nlohmann::json
             {
@@ -281,10 +281,10 @@ namespace cp
 
     private:
         /// Map of field-name → getter producing JSON.
-        std::unordered_map<std::string, std::function<nlohmann::json()>> m_fields;
+        std::unordered_map<string, std::function<nlohmann::json()>> m_fields;
 
         /// Map of field-name → setter applying JSON to the field.
-        std::unordered_map<std::string, std::function<void(const nlohmann::json &)>> m_deserializers;
+        std::unordered_map<string, std::function<void(const nlohmann::json &)>> m_deserializers;
 
         // ---------------------------------------------------------------------
         // Internal Type Traits

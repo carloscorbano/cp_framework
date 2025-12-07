@@ -1,11 +1,5 @@
 #include <iostream>
 #include <cp_framework/framework.hpp>
-#include <cp_framework/systems/eventSystem.hpp>
-#include <cp_framework/core/debug.hpp>
-
-struct onEvent : cp::Event
-{
-};
 
 int main()
 {

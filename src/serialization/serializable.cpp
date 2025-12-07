@@ -1,0 +1,1 @@
+#include "cp_framework/serialization/serializable.hpp"

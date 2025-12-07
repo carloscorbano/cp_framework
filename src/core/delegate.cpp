@@ -1,1 +1,0 @@
-#include "cp_framework/core/delegate.hpp"

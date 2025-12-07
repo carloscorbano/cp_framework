@@ -1,8 +1,8 @@
 #include "cp_framework/framework.hpp"
-#include "cp_framework/core/debug.hpp"
-#include "cp_framework/systems/eventSystem.hpp"
-#include "cp_framework/core/gameTime.hpp"
-#include "cp_framework/graphics/window.hpp"
+#include "cp_framework/debug/debug.hpp"
+#include "cp_framework/events/eventSystem.hpp"
+#include "cp_framework/time/gameTime.hpp"
+#include "cp_framework/window/window.hpp"
 
 namespace cp
 {

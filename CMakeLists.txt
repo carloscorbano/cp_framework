@@ -16,35 +16,80 @@ option(BUILD_TEST "Build the test application" ON)
 # LIB
 ##########################################################
 add_library(${CMAKE_PROJECT_NAME} SHARED 
-    src/dllmain.cpp
-    src/framework.cpp
-    
-    src/core/debug.cpp 
-    src/core/filesystem.cpp
-    src/core/algorithm.cpp
-    src/core/compression.cpp
-    src/core/threadPool.cpp
-    src/core/serializable.cpp
-    src/core/security.cpp
-    src/core/types.cpp
-    src/core/export.cpp
-    src/core/math.cpp
-    src/core/events.cpp
-    src/core/delegate.cpp
-    src/core/hybridEvents.cpp
-    src/core/diagnostics.cpp
-    src/core/gameTime.cpp
-
-    src/systems/eventSystem.cpp
-
+    #################
+    # THIRD PARTIES #
+    #################
     src/thirdparty/glfw/glfw.inc.cpp
     src/thirdparty/imgui/imgui.inc.cpp
     src/thirdparty/stb/stb.inc.cpp
     src/thirdparty/vma/vma.inc.cpp
 
-    src/graphics/vulkan/vkTypes.cpp
-    src/graphics/window.cpp
+    #################
+    # ROOT          #
+    #################
+    src/dllmain.cpp
+    src/framework.cpp
+    
+    #################
+    # DEBUG         #
+    #################
+    src/debug/debug.cpp 
+    src/debug/diagnostics.cpp
 
+    #################
+    # FILESYSTEM    #
+    #################
+    src/filesystem/filesystem.cpp
+    src/filesystem/compression.cpp
+    
+    #################
+    # CORE          #
+    #################
+    src/core/types.cpp
+    src/core/export.cpp
+    src/core/algorithm.cpp
+
+    #################
+    # THREADING     #
+    #################
+    src/threading/threadPool.cpp
+    
+    #################
+    # SERIALIZATION #
+    #################
+    src/serialization/serializable.cpp
+
+    #################
+    # SECURITY      #
+    #################
+    src/security/security.cpp
+    
+    #################
+    # MATH          #
+    #################
+    src/math/math.cpp
+    
+    #################
+    # EVENTS        #
+    #################
+    src/events/events.cpp
+    src/events/delegate.cpp
+    src/events/hybridEvents.cpp
+    src/events/eventSystem.cpp
+
+    #################
+    # TIME          #
+    #################
+    src/time/gameTime.cpp
+
+    #################
+    # WINDOW        #
+    #################
+    src/window/window.cpp
+
+    #################
+    # WORLD         #
+    #################
     src/world/world.cpp
 )
 

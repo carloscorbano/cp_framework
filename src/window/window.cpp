@@ -8,7 +8,7 @@ namespace cp
     Window::Window(const WindowInfo &createInfo)
         : m_wndInfo(createInfo)
     {
-        ScopedLog("WINDOW", "Creating window class.", "Successfully created window class");
+        ScopedLog slog("WINDOW", "Creating window class.", "Successfully created window class");
 
         if (!glfwInit())
         {
@@ -52,7 +52,7 @@ namespace cp
 
     Window::~Window()
     {
-        ScopedLog("WINDOW", "Destroying window class", "Successfully destroyed window class!");
+        ScopedLog slog("WINDOW", "Destroying window class", "Successfully destroyed window class!");
         if (m_wndHandle)
         {
             glfwDestroyWindow(m_wndHandle);

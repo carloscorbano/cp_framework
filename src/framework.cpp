@@ -13,7 +13,7 @@ namespace cp
 {
     Framework::Framework()
     {
-        ScopedLog("FRAMEWORK", "Creating framework class", "Successfully created framework class");
+        ScopedLog slog("FRAMEWORK", "Creating framework class", "Successfully created framework class");
         // singletons initialization.
         EventSystem::Get();
         GameTime::Get();
@@ -21,12 +21,12 @@ namespace cp
 
     Framework::~Framework()
     {
-        ScopedLog("FRAMEWORK", "Destroying framework class", "Successfully destroyed framework class");
+        ScopedLog slog("FRAMEWORK", "Destroying framework class", "Successfully destroyed framework class");
     }
 
     void Framework::Init()
     {
-        ScopedLog("FRAMEWORK", "Starting to initialize.", "Successfully initialized.");
+        ScopedLog slog("FRAMEWORK", "Starting to initialize.", "Successfully initialized.");
 
         // Create modules
         WindowInfo createInfo{.width = 1320, .height = 780, .title = "CP_FRAMEWORK", .mode = WindowMode::Windowed, .vsync = true};
@@ -43,8 +43,7 @@ namespace cp
     void Framework::Run()
     {
         assert(m_initializated && "Init function must be called before Run func");
-
-        ScopedLog("FRAMEWORK", "Running game loop.", "Successfully stopped game loop.");
+        LOG_INFO("[FRAMEWORK] Running main game loop!");
         m_isRunning.store(true);
 
         while (m_isRunning.load())
@@ -90,11 +89,17 @@ namespace cp
 
             m_diag->EndFrame();
         }
+
+        LOG_SUCCESS("[FRAMEWORK] Successfully terminanted game loop!");
     }
 
     void Framework::update(const f64 &deltaTime)
     {
         (void)deltaTime;
+        if (m_input->isKeyPressed(GLFW_KEY_A))
+        {
+            m_vkManager->GetSwapchain().Recreate(VK_PRESENT_MODE_FIFO_KHR);
+        }
     }
 
     void Framework::fixedUpdate(const f64 &fixedTime)

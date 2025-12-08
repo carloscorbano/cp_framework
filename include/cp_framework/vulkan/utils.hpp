@@ -35,4 +35,13 @@ namespace cp::vulkan::utils
         const VkPhysicalDeviceVulkan11Features &enabled11,
         const VkPhysicalDeviceVulkan12Features &enabled12,
         const VkPhysicalDeviceVulkan13Features &enabled13);
+
+    void SignalTimelineSemaphore(VkDevice device, VkSemaphore semaphore, const uint64_t &value);
+    void WaitTimelineSemaphores(VkDevice device, std::span<const VkSemaphore> semaphores, std::span<uint64_t> &values, const uint64_t &timeout = UINT64_MAX);
+
+    VkResult BeginCommandBuffer(VkCommandBuffer cmdBuffer,
+                                const std::vector<VkFormat> &colorAttachments,
+                                const VkFormat &depthFormat,
+                                const VkFormat &stencilFormat,
+                                const VkSampleCountFlagBits &rasterizationSamples);
 }

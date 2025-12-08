@@ -8,14 +8,42 @@
 
 namespace cp::vulkan
 {
-    Swapchain::Swapchain(GLFWwindow *window, Instance &instance, Device &device, PhysicalDevice &physDevice, Surface &surface, VkPresentModeKHR preferredMode, Swapchain *oldSwapchain)
-        : m_device(device)
+    Swapchain::Swapchain(GLFWwindow *window, Instance &instance, Device &device, PhysicalDevice &physDevice, Surface &surface, VkPresentModeKHR preferredMode)
+        : m_window(window), m_instance(instance), m_device(device), m_physDevice(physDevice), m_surface(surface)
     {
-        SwapChainSupportDetails swapChainSupport = utils::querySwapChainSupport(instance.get(), physDevice.get(), surface.get());
+        create(preferredMode, nullptr);
+    }
+
+    Swapchain::~Swapchain()
+    {
+        destroy(m_swapchain, m_views, m_swapchainImageSemaphore);
+    }
+
+    void Swapchain::Recreate(VkPresentModeKHR preferredMode)
+    {
+        LOG_INFO("[VULKAN] Recreating swapchain!");
+        vkDeviceWaitIdle(m_device.get());
+        auto oldSwapchain = m_swapchain;
+        auto oldImageViews = m_views;
+        auto oldRenderFinishedSemaphores = m_swapchainImageSemaphore;
+
+        create(preferredMode, oldSwapchain);
+        destroy(oldSwapchain, oldImageViews, oldRenderFinishedSemaphores);
+    }
+
+    VkResult Swapchain::AcquireSwapchainNextImage(VkSemaphore availableSemaphore, uint32_t *outIndex, uint64_t timeout)
+    {
+        return vkAcquireNextImageKHR(m_device.get(), m_swapchain, timeout, availableSemaphore, VK_NULL_HANDLE, outIndex);
+    }
+
+    void Swapchain::create(VkPresentModeKHR preferredMode, VkSwapchainKHR oldSwapchain)
+    {
+        ScopedLog slog("VULKAN", "Creating swapchain...", "Succesfully created swapchain.");
+        SwapChainSupportDetails swapChainSupport = utils::querySwapChainSupport(m_instance.get(), m_physDevice.get(), m_surface.get());
 
         VkSurfaceFormat2KHR format = utils::chooseSwapSurfaceFormat(swapChainSupport.formats);
         VkPresentModeKHR presentMode = utils::chooseSwapPresentMode(swapChainSupport.presentModes, preferredMode);
-        VkExtent2D extent = utils::chooseSwapExtent(window, swapChainSupport.capabilities);
+        VkExtent2D extent = utils::chooseSwapExtent(m_window, swapChainSupport.capabilities);
 
         uint32_t imageCount = swapChainSupport.capabilities.surfaceCapabilities.minImageCount + 1;
 
@@ -26,7 +54,7 @@ namespace cp::vulkan
 
         VkSwapchainCreateInfoKHR createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-        createInfo.surface = surface.get();
+        createInfo.surface = m_surface.get();
 
         createInfo.minImageCount = imageCount;
         createInfo.imageFormat = format.surfaceFormat.format;
@@ -35,7 +63,7 @@ namespace cp::vulkan
         createInfo.imageArrayLayers = 1;
         createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
-        auto familyIndices = device.GetIndices();
+        auto familyIndices = m_device.GetIndices();
 
         uint32_t queueFamilyIndices[] = {familyIndices.graphicsFamily.value(), familyIndices.presentFamily.value()};
 
@@ -57,9 +85,9 @@ namespace cp::vulkan
         createInfo.presentMode = presentMode;
         createInfo.clipped = VK_TRUE;
 
-        createInfo.oldSwapchain = oldSwapchain ? oldSwapchain->get() : VK_NULL_HANDLE;
+        createInfo.oldSwapchain = oldSwapchain ? oldSwapchain : VK_NULL_HANDLE;
 
-        if (vkCreateSwapchainKHR(device.get(), &createInfo, nullptr, &m_swapchain) != VK_SUCCESS)
+        if (vkCreateSwapchainKHR(m_device.get(), &createInfo, nullptr, &m_swapchain) != VK_SUCCESS)
         {
             LOG_THROW("Failed to create swap chain!");
         }
@@ -124,17 +152,17 @@ namespace cp::vulkan
         LOG_INFO("  Extent:           {}x{}", extent.width, extent.height);
         LOG_INFO("============================================================");
 
-        vkGetSwapchainImagesKHR(device.get(), m_swapchain, &imageCount, nullptr);
+        vkGetSwapchainImagesKHR(m_device.get(), m_swapchain, &imageCount, nullptr);
         m_images.resize(imageCount);
-        vkGetSwapchainImagesKHR(device.get(), m_swapchain, &imageCount, m_images.data());
+        vkGetSwapchainImagesKHR(m_device.get(), m_swapchain, &imageCount, m_images.data());
 
         m_colorFormat = format.surfaceFormat.format;
-        m_depthFormat = utils::findDepthFormat(physDevice.get());
+        m_depthFormat = utils::findDepthFormat(m_physDevice.get());
         m_stencilFormat = utils::hasStencilFormat(m_depthFormat) ? m_depthFormat : VK_FORMAT_UNDEFINED;
         m_extent = extent;
 
         m_views.resize(m_images.size());
-        for (size_t i = 0; i < m_images.size(); i++)
+        for (size_t i = 0; i < m_images.size(); ++i)
         {
             VkImageViewCreateInfo viewInfo{};
             viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -151,21 +179,41 @@ namespace cp::vulkan
             viewInfo.subresourceRange.baseArrayLayer = 0;
             viewInfo.subresourceRange.layerCount = 1;
 
-            if (vkCreateImageView(device.get(), &viewInfo, nullptr, &m_views[i]) != VK_SUCCESS)
+            if (vkCreateImageView(m_device.get(), &viewInfo, nullptr, &m_views[i]) != VK_SUCCESS)
             {
-                LOG_THROW("Failed to create image views!");
+                LOG_THROW("[VULKAN] Failed to create image views!");
+            }
+        }
+
+        m_swapchainImageSemaphore.resize(m_images.size());
+        for (size_t i = 0; i < m_images.size(); ++i)
+        {
+            VkSemaphoreCreateInfo semCreateInfo{};
+            semCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+            semCreateInfo.pNext = nullptr;
+            semCreateInfo.flags = 0;
+
+            if (vkCreateSemaphore(m_device.get(), &semCreateInfo, nullptr, &m_swapchainImageSemaphore[i]) != VK_SUCCESS)
+            {
+                LOG_THROW("[VULKAN] Failed to create render finished semaphores");
             }
         }
     }
 
-    Swapchain::~Swapchain()
+    void Swapchain::destroy(VkSwapchainKHR swapchain, std::span<VkImageView> views, std::span<VkSemaphore> renderFinishedSemaphores)
     {
+        ScopedLog slog("VULKAN", "Destroying swapchain...", "Succesfully destroyed swapchain.");
         auto device = m_device.get();
-        CP_VK_DELETE_HANDLE(m_swapchain, vkDestroySwapchainKHR(device, m_swapchain, nullptr));
+        CP_VK_DELETE_HANDLE(swapchain, vkDestroySwapchainKHR(device, swapchain, nullptr));
 
-        for (auto &view : m_views)
+        for (auto &view : views)
         {
             CP_VK_DELETE_HANDLE(view, vkDestroyImageView(device, view, nullptr));
+        }
+
+        for (auto &semaphore : renderFinishedSemaphores)
+        {
+            CP_VK_DELETE_HANDLE(semaphore, vkDestroySemaphore(device, semaphore, nullptr));
         }
     }
 } // namespace cp::vulkan

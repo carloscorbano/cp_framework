@@ -12,12 +12,12 @@ namespace cp
           m_vma(m_instance, m_device, m_physDevice),
           m_swapchain(window, m_instance, m_device, m_physDevice, m_surface, VK_PRESENT_MODE_FIFO_KHR)
     {
-        ScopedLog("VULKAN MANAGER", "Starting to create vulkan manager class.", "Successfully created vulkan manager class.");
+        ScopedLog slog("VULKAN MANAGER", "Starting to create vulkan manager class.", "Successfully created vulkan manager class.");
     }
 
     VkManager::~VkManager()
     {
-        ScopedLog("VULKAN MANAGER", "Starting to destroy vulkan manager", "Successfully destroyed vulkan manager.");
+        ScopedLog slog("VULKAN MANAGER", "Starting to destroy vulkan manager", "Successfully destroyed vulkan manager.");
     }
 } // namespace cp
 

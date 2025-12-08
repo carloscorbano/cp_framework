@@ -100,6 +100,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
     src/vulkan/device.cpp
     src/vulkan/vma.cpp
     src/vulkan/swapchain.cpp
+    src/vulkan/commandPool.cpp
 
     #################
     # INPUT         #

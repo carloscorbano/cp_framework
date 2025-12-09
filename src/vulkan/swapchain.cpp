@@ -16,7 +16,7 @@ namespace cp::vulkan
 
     Swapchain::~Swapchain()
     {
-        destroy(m_swapchain, m_views, m_swapchainImageSemaphore);
+        destroy(m_swapchain, m_views, m_renderFinishedSemaphores);
     }
 
     void Swapchain::Recreate(VkPresentModeKHR preferredMode)
@@ -25,15 +25,31 @@ namespace cp::vulkan
         vkDeviceWaitIdle(m_device.get());
         auto oldSwapchain = m_swapchain;
         auto oldImageViews = m_views;
-        auto oldRenderFinishedSemaphores = m_swapchainImageSemaphore;
+        auto oldRenderFinishedSemaphores = m_renderFinishedSemaphores;
 
         create(preferredMode, oldSwapchain);
         destroy(oldSwapchain, oldImageViews, oldRenderFinishedSemaphores);
     }
 
-    VkResult Swapchain::AcquireSwapchainNextImage(VkSemaphore availableSemaphore, uint32_t *outIndex, uint64_t timeout)
+    VkResult Swapchain::AcquireSwapchainNextImage(VkSemaphore availableSemaphore, uint64_t timeout)
     {
-        return vkAcquireNextImageKHR(m_device.get(), m_swapchain, timeout, availableSemaphore, VK_NULL_HANDLE, outIndex);
+        return vkAcquireNextImageKHR(m_device.get(), m_swapchain, timeout, availableSemaphore, VK_NULL_HANDLE, &m_curImageIndex);
+    }
+
+    void Swapchain::TransitionCurrentImageLayout(VkCommandBuffer cmdBuffer, const SwapchainImageLayoutTarget &targetLayout)
+    {
+        switch (targetLayout)
+        {
+        case SwapchainImageLayoutTarget::TRANSFER:
+            utils::TransitionImageLayout(cmdBuffer, GetCurrentImage(), m_colorFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+            break;
+        case SwapchainImageLayoutTarget::COLOR_ATTACHMENT:
+            utils::TransitionImageLayout(cmdBuffer, GetCurrentImage(), m_colorFormat, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+            break;
+        case SwapchainImageLayoutTarget::PRESENT:
+            utils::TransitionImageLayout(cmdBuffer, GetCurrentImage(), m_colorFormat, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+            break;
+        }
     }
 
     void Swapchain::create(VkPresentModeKHR preferredMode, VkSwapchainKHR oldSwapchain)
@@ -185,7 +201,7 @@ namespace cp::vulkan
             }
         }
 
-        m_swapchainImageSemaphore.resize(m_images.size());
+        m_renderFinishedSemaphores.resize(m_images.size());
         for (size_t i = 0; i < m_images.size(); ++i)
         {
             VkSemaphoreCreateInfo semCreateInfo{};
@@ -193,7 +209,7 @@ namespace cp::vulkan
             semCreateInfo.pNext = nullptr;
             semCreateInfo.flags = 0;
 
-            if (vkCreateSemaphore(m_device.get(), &semCreateInfo, nullptr, &m_swapchainImageSemaphore[i]) != VK_SUCCESS)
+            if (vkCreateSemaphore(m_device.get(), &semCreateInfo, nullptr, &m_renderFinishedSemaphores[i]) != VK_SUCCESS)
             {
                 LOG_THROW("[VULKAN] Failed to create render finished semaphores");
             }

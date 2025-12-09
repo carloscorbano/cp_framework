@@ -4,6 +4,20 @@
 
 namespace cp::vulkan
 {
+    CommandBuffer::CommandBuffer(Device &device, CommandPool &pool, VkCommandBufferLevel &level)
+    {
+        VkCommandBufferAllocateInfo allocInfo{};
+        allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        allocInfo.commandPool = pool.get();
+        allocInfo.level = level;
+        allocInfo.pNext = nullptr;
+
+        if (vkAllocateCommandBuffers(device.get(), &allocInfo, &m_cmdBuffer) != VK_SUCCESS)
+        {
+            LOG_THROW("Failed to allocate command buffer!");
+        }
+    }
+
     CommandPool::CommandPool(Device &device, const uint32_t &queueFamilyIndex, VkCommandPoolCreateFlags flags)
         : m_device(device)
     {
@@ -22,30 +36,5 @@ namespace cp::vulkan
     CommandPool::~CommandPool()
     {
         CP_VK_DELETE_HANDLE(m_commandPool, vkDestroyCommandPool(m_device.get(), m_commandPool, nullptr));
-    }
-
-    CommandBuffer CommandPool::CreateCommandBuffer(const VkCommandBufferLevel &level)
-    {
-        VkCommandBufferAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-        allocInfo.commandPool = m_commandPool;
-        allocInfo.level = level;
-        allocInfo.pNext = nullptr;
-
-        VkCommandBuffer cmdb;
-        if (vkAllocateCommandBuffers(m_device.get(), &allocInfo, &cmdb) != VK_SUCCESS)
-        {
-            LOG_THROW("Failed to allocate command buffer!");
-        }
-
-        uint32_t index = static_cast<uint32_t>(m_commandBuffers.size());
-        m_commandBuffers.push_back(std::move(cmdb));
-
-        return {index};
-    }
-
-    const VkCommandBuffer &CommandPool::GetCommandBuffer(const CommandBuffer &commandBuffer)
-    {
-        return m_commandBuffers.at(commandBuffer.m_index);
     }
 }

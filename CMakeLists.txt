@@ -104,6 +104,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
     src/vulkan/stagingRing.cpp
     src/vulkan/buffer.cpp
     src/vulkan/image.cpp
+    src/vulkan/descriptorPool.cpp
 
     #################
     # INPUT         #

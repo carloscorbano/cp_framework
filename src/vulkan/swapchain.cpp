@@ -220,16 +220,16 @@ namespace cp::vulkan
     {
         ScopedLog slog("VULKAN", "Destroying swapchain...", "Succesfully destroyed swapchain.");
         auto device = m_device.get();
-        CP_VK_DELETE_HANDLE(swapchain, vkDestroySwapchainKHR(device, swapchain, nullptr));
+        CP_VK_DESTROY(device, swapchain, vkDestroySwapchainKHR);
 
         for (auto &view : views)
         {
-            CP_VK_DELETE_HANDLE(view, vkDestroyImageView(device, view, nullptr));
+            CP_VK_DESTROY(device, view, vkDestroyImageView);
         }
 
         for (auto &semaphore : renderFinishedSemaphores)
         {
-            CP_VK_DELETE_HANDLE(semaphore, vkDestroySemaphore(device, semaphore, nullptr));
+            CP_VK_DESTROY(device, semaphore, vkDestroySemaphore);
         }
     }
 } // namespace cp::vulkan

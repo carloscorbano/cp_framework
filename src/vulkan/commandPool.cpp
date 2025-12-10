@@ -35,6 +35,6 @@ namespace cp::vulkan
 
     CommandPool::~CommandPool()
     {
-        CP_VK_DELETE_HANDLE(m_commandPool, vkDestroyCommandPool(m_device.get(), m_commandPool, nullptr));
+        CP_VK_DESTROY(m_device.get(), m_commandPool, vkDestroyCommandPool);
     }
 }

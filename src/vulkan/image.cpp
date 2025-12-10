@@ -83,8 +83,8 @@ namespace cp::vulkan
 
     void Image::destroy()
     {
-        CP_VK_DELETE_HANDLE(m_image, vkDestroyImage(m_device.get(), m_image, nullptr));
-        CP_VK_DELETE_HANDLE(m_view, vkDestroyImageView(m_device.get(), m_view, nullptr));
-        CP_VK_DELETE_HANDLE(m_allocation, vmaDestroyImage(m_vma.get(), m_image, m_allocation));
+        CP_VK_DESTROY(m_device.get(), m_view, vkDestroyImageView);
+        vmaDestroyImage(m_vma.get(), m_image, m_allocation);
+        m_image = VK_NULL_HANDLE;
     }
 }

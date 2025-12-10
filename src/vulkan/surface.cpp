@@ -15,6 +15,6 @@ namespace cp::vulkan
 
     Surface::~Surface()
     {
-        CP_VK_DELETE_HANDLE(m_surface, vkDestroySurfaceKHR(m_instance.get(), m_surface, nullptr));
+        CP_VK_DESTROY(m_instance.get(), m_surface, vkDestroySurfaceKHR);
     }
 } // namespace cp::vulkan

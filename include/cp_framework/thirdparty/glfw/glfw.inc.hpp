@@ -12,3 +12,13 @@
             (HANDLE) = VK_NULL_HANDLE;    \
         }                                 \
     } while (0)
+
+#define CP_VK_DESTROY(DEVICE, HANDLE, CALL) \
+    do                                      \
+    {                                       \
+        if ((HANDLE) != VK_NULL_HANDLE)     \
+        {                                   \
+            CALL(DEVICE, HANDLE, nullptr);  \
+            (HANDLE) = VK_NULL_HANDLE;      \
+        }                                   \
+    } while (0)

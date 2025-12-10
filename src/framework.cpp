@@ -7,7 +7,7 @@
 #include "cp_framework/window/window.hpp"
 #include "cp_framework/threading/threadPool.hpp"
 #include "cp_framework/input/inputManager.hpp"
-#include "cp_framework/vulkan/vkManager.hpp"
+#include "cp_framework/vulkan/manager.hpp"
 
 namespace cp
 {

@@ -2,7 +2,7 @@
 
 #include "cp_framework/core/types.hpp"
 #include "cp_framework/thirdparty/glfw/glfw.inc.hpp"
-#include "vkTypes.hpp"
+#include "types.hpp"
 #include <span>
 
 namespace cp::vulkan

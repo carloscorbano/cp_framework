@@ -81,14 +81,6 @@ namespace cp::vulkan
         utils::CopyImage(cmdBuffer, other.m_image, m_image, width, height, mipLevel, layerCount);
     }
 
-    void Image::CopyTo(VkCommandBuffer cmdBuffer, const Image &other, uint32_t width, uint32_t height, uint32_t mipLevel, uint32_t layerCount)
-    {
-        if (this == &other || other.m_image == VK_NULL_HANDLE || m_image == VK_NULL_HANDLE)
-            return;
-
-        utils::CopyImage(cmdBuffer, m_image, other.m_image, width, height, mipLevel, layerCount);
-    }
-
     void Image::destroy()
     {
         CP_VK_DELETE_HANDLE(m_image, vkDestroyImage(m_device.get(), m_image, nullptr));

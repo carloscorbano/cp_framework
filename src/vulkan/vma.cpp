@@ -3,7 +3,7 @@
 #include "cp_framework/vulkan/instance.hpp"
 #include "cp_framework/vulkan/device.hpp"
 #include "cp_framework/debug/debug.hpp"
-#include "cp_framework/vulkan/vkTypes.hpp"
+#include "cp_framework/vulkan/types.hpp"
 
 namespace cp::vulkan
 {

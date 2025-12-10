@@ -1,4 +1,4 @@
-#include "cp_framework/vulkan/vkManager.hpp"
+#include "cp_framework/vulkan/manager.hpp"
 #include "cp_framework/debug/debug.hpp"
 
 namespace cp

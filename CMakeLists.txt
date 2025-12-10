@@ -91,7 +91,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
     #################
     # VULKAN        #
     #################
-    src/vulkan/vkManager.cpp
+    src/vulkan/manager.cpp
     src/vulkan/utils.cpp
     src/vulkan/instance.cpp
     src/vulkan/surface.cpp

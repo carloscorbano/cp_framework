@@ -110,19 +110,6 @@ namespace cp::vulkan
         void CopyFrom(VkCommandBuffer cmdBuffer, const Image &other, uint32_t width, uint32_t height,
                       uint32_t mipLevel, uint32_t layerCount);
 
-        /**
-         * @brief Copies this image’s content into another image.
-         *
-         * @param cmdBuffer Command buffer used for issuing the copy.
-         * @param other Destination image.
-         * @param width Width of the region to copy.
-         * @param height Height of the region to copy.
-         * @param mipLevel Mipmap level to copy.
-         * @param layerCount Number of array layers to copy.
-         */
-        void CopyTo(VkCommandBuffer cmdBuffer, const Image &other, uint32_t width, uint32_t height,
-                    uint32_t mipLevel, uint32_t layerCount);
-
     private:
         /**
          * @brief Internal cleanup method used by the destructor.
@@ -137,6 +124,7 @@ namespace cp::vulkan
         VkImageLayout m_layout = VK_IMAGE_LAYOUT_UNDEFINED; ///< Current image layout.
         VkFormat m_format = VK_FORMAT_UNDEFINED;            ///< Image format.
         VkExtent3D m_extent{};                              ///< Image extent (width, height, depth).
+        uint32_t m_channels;                                ///< Number of color channels.
         VkImageUsageFlags m_usage = 0;                      ///< Usage flags for reference/debugging.
 
         Device &m_device; ///< Reference to the Vulkan device wrapper.

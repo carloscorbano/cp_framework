@@ -36,7 +36,7 @@ namespace cp::vulkan
          */
         ~Buffer();
 
-        CP_RULE_OF_FIVE_DELETE(Buffer);
+        CP_NO_COPY_CLASS(Buffer);
         CP_HANDLE_CONVERSION(VkBuffer, m_buffer);
 
         /**
@@ -50,6 +50,8 @@ namespace cp::vulkan
          * @return const VmaAllocationInfo& Allocation metadata.
          */
         const VmaAllocationInfo &GetAllocationInfo() const noexcept { return m_allocationInfo; }
+
+        void *GetMappedPtr() const noexcept { return m_mappedPtr; }
 
         /**
          * @brief Returns the Vulkan usage flags assigned to this buffer.

@@ -14,7 +14,7 @@ namespace cp::vulkan
         PhysicalDevice(Instance &instance, Surface &surface, std::span<const char *> deviceExtensions);
         ~PhysicalDevice() = default;
 
-        CP_RULE_OF_FIVE_DELETE(PhysicalDevice);
+        CP_NO_COPY_CLASS(PhysicalDevice);
         CP_HANDLE_CONVERSION(VkPhysicalDevice, m_physDevice);
 
     private:

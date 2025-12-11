@@ -90,7 +90,7 @@ namespace cp::vulkan
          */
         ~StagingRing();
 
-        CP_RULE_OF_FIVE_DELETE(StagingRing);
+        CP_NO_COPY_CLASS(StagingRing);
 
         /**
          * @brief Reserves a region of the ring buffer for writing.

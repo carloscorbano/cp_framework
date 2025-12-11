@@ -90,7 +90,7 @@ namespace cp
         return instance;          \
     }
 
-#define CP_RULE_OF_FIVE_DELETE(TypeName)            \
+#define CP_NO_COPY_CLASS(TypeName)                  \
     /* Copy Constructor */                          \
     TypeName(const TypeName &) = delete;            \
     /* Copy Assignment  */                          \
@@ -103,3 +103,7 @@ namespace cp
 #define CP_HANDLE_CONVERSION(HANDLE_TYPE, MEMBER)            \
     explicit operator HANDLE_TYPE() const { return MEMBER; } \
     HANDLE_TYPE get() const { return MEMBER; }
+
+#define CP_GETTER_AND_SETTER(TYPE, NAME, MEMBER) \
+    TYPE &get##NAME() const { return MEMBER; }   \
+    void set##NAME(const TYPE &value) { MEMBER = value; }

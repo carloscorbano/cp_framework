@@ -15,7 +15,7 @@ namespace cp::vulkan
         Device(PhysicalDevice &physDevice, Surface &surface, bool validationLayersEnabled, std::span<const char *> validationLayers, std::span<const char *> deviceExtensions);
         ~Device();
 
-        CP_RULE_OF_FIVE_DELETE(Device);
+        CP_NO_COPY_CLASS(Device);
         CP_HANDLE_CONVERSION(VkDevice, m_device);
 
         const QueueFamilyIndices &GetIndices() noexcept { return m_familyIndices; }

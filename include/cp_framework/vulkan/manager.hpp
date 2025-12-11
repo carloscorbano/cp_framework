@@ -28,7 +28,7 @@ namespace cp
         VkManager(GLFWwindow *window);
         ~VkManager();
 
-        CP_RULE_OF_FIVE_DELETE(VkManager);
+        CP_NO_COPY_CLASS(VkManager);
 
         vulkan::Instance &GetInstance() { return m_instance; }
         vulkan::Surface &GetSurface() { return m_surface; }

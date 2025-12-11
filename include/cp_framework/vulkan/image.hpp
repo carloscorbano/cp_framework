@@ -34,12 +34,15 @@ namespace cp::vulkan
         Image(Device &device, Vma &vma, uint32_t width, uint32_t height, VkFormat format,
               VkImageUsageFlags usage, VmaMemoryUsage memoryUsage, VkImageAspectFlags aspectMask);
 
+        Image(Device &device, Vma &vma, void *data, VkCommandBuffer cmdBuffer, uint32_t width, uint32_t height, VkFormat format,
+              VkImageUsageFlags usage, VmaMemoryUsage memoryUsage, VkImageAspectFlags aspectMask);
+
         /**
          * @brief Destructor that automatically frees the Vulkan image and its resources.
          */
         ~Image();
 
-        CP_RULE_OF_FIVE_DELETE(Image);
+        CP_NO_COPY_CLASS(Image);
         CP_HANDLE_CONVERSION(VkImage, m_image);
 
         /**
@@ -107,10 +110,14 @@ namespace cp::vulkan
          * @param mipLevel Mipmap level to copy.
          * @param layerCount Number of array layers to copy.
          */
-        void CopyFrom(VkCommandBuffer cmdBuffer, const Image &other, uint32_t width, uint32_t height,
-                      uint32_t mipLevel, uint32_t layerCount);
+        void CopyFromImage(VkCommandBuffer cmdBuffer, const Image &other, uint32_t width, uint32_t height,
+                           uint32_t mipLevel, uint32_t layerCount);
+
+        void CopyFromCPU(VkCommandBuffer cmdBuffer, const void *data, uint32_t width, uint32_t height, uint32_t channels = 4);
 
     private:
+        void createInternal(uint32_t width, uint32_t height, VkFormat format, VkImageUsageFlags usage, VmaMemoryUsage memoryUsage, VkImageAspectFlags aspectMask);
+
         /**
          * @brief Internal cleanup method used by the destructor.
          */

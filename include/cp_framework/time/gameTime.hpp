@@ -38,7 +38,7 @@ namespace cp
 
     public:
         MAKE_SINGLETON(GameTime);
-        CP_RULE_OF_FIVE_DELETE(GameTime);
+        CP_NO_COPY_CLASS(GameTime);
 
         /**
          * @brief Updates timing values. Must be called once per frame.

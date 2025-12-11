@@ -64,7 +64,7 @@ namespace cp::vulkan
          */
         ~CommandPool();
 
-        CP_RULE_OF_FIVE_DELETE(CommandPool);
+        CP_NO_COPY_CLASS(CommandPool);
         CP_HANDLE_CONVERSION(VkCommandPool, m_commandPool);
 
     private:

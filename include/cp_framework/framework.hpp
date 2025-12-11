@@ -24,7 +24,7 @@ namespace cp
         Framework();
         ~Framework();
 
-        CP_RULE_OF_FIVE_DELETE(Framework);
+        CP_NO_COPY_CLASS(Framework);
 
         /**
          * @brief Initializes the framework.

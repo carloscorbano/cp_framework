@@ -51,7 +51,7 @@ namespace cp
          */
         ~Window();
 
-        CP_RULE_OF_FIVE_DELETE(Window);
+        CP_NO_COPY_CLASS(Window);
 
         /**
          * @brief Returns the underlying GLFWwindow handle.

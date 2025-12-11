@@ -13,7 +13,7 @@ namespace cp::vulkan
         DescriptorPool(Device &device, uint32_t maxSets, std::span<const VkDescriptorPoolSize> sizes, VkDescriptorPoolCreateFlags flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT);
         ~DescriptorPool();
 
-        CP_RULE_OF_FIVE_DELETE(DescriptorPool);
+        CP_NO_COPY_CLASS(DescriptorPool);
         CP_HANDLE_CONVERSION(VkDescriptorPool, m_descriptorPool);
 
     private:

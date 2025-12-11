@@ -14,7 +14,7 @@ namespace cp::vulkan
         Vma(Instance &instance, Device &device, PhysicalDevice &physDevice);
         ~Vma();
 
-        CP_RULE_OF_FIVE_DELETE(Vma);
+        CP_NO_COPY_CLASS(Vma);
 
         CP_HANDLE_CONVERSION(VmaAllocator, m_vmaAlloc);
 

@@ -12,7 +12,7 @@ namespace cp
         World();
         ~World();
 
-        CP_RULE_OF_FIVE_DELETE(World);
+        CP_NO_COPY_CLASS(World);
 
     private:
         UPTR<entt::registry> m_registry;

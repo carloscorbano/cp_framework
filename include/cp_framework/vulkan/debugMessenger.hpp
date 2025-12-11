@@ -12,7 +12,7 @@ namespace cp::vulkan
         DebugMessenger(Instance &instance, PFN_vkDebugUtilsMessengerCallbackEXT pfunc);
         ~DebugMessenger();
 
-        CP_RULE_OF_FIVE_DELETE(DebugMessenger);
+        CP_NO_COPY_CLASS(DebugMessenger);
 
         CP_HANDLE_CONVERSION(VkDebugUtilsMessengerEXT, m_debugMessenger);
 

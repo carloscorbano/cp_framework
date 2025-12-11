@@ -53,7 +53,7 @@ namespace cp::vulkan
          */
         ~Swapchain();
 
-        CP_RULE_OF_FIVE_DELETE(Swapchain);
+        CP_NO_COPY_CLASS(Swapchain);
         CP_HANDLE_CONVERSION(VkSwapchainKHR, m_swapchain);
 
         /**

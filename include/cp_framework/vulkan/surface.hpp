@@ -11,7 +11,7 @@ namespace cp::vulkan
         Surface(GLFWwindow *window, Instance &instance);
         ~Surface();
 
-        CP_RULE_OF_FIVE_DELETE(Surface);
+        CP_NO_COPY_CLASS(Surface);
 
         CP_HANDLE_CONVERSION(VkSurfaceKHR, m_surface);
 
